@@ -318,7 +318,9 @@ Privacy Policy and Terms of Use. Content carried over verbatim from the current 
 
 ## 8. Technical architecture
 
-**Stack.** Next.js 15 (App Router) · React 19 · TypeScript strict · Tailwind CSS v4 · GSAP 3 (ScrollTrigger, SplitText, Observer) · Lenis · `react-hook-form` + `zod` · `next/font` (Instrument Serif, Inter) · `lucide-react`.
+**Stack.** Next.js 16 (App Router, Turbopack) · React 19.2 · TypeScript strict · Tailwind CSS v4 · GSAP 3.15 + `@gsap/react` (ScrollTrigger, SplitText, Observer — all free as of GSAP 3.13) · Lenis · `react-hook-form` + `zod` · `next/font` (Instrument Serif, Inter) · `lucide-react`.
+
+> Scaffolded on Next.js **16.3.0** rather than the 15 originally specified — 16 is current stable and there is no reason to start a new build a major version behind.
 
 **Deliberately excluded.** `framer-motion` (GSAP does all of it), `shadcn/ui` and the ~30 Radix primitives (three components are hand-built instead: accordion, select, dialog), `next-themes` (one deliberate look), `recharts`, `embla-carousel`, `cmdk`, `vaul`, `sonner`, `input-otp`, `react-resizable-panels`. The current site installs all of these and uses a fraction. Each dependency added to the new build must be justified against the code it replaces.
 

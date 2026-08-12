@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   Tazriel design tokens — see docs/PRD.md §4
+   Brand palette retained. What changed is the ratio, not the hue.
+   ───────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Color ───────────────────────────────────────────────────── */
+  --color-ink: #020035; /* primary ground, ~55% of surface */
+  --color-ink-raised: #0a0a4d; /* elevated panels on ink — replaces frosted glass */
+  --color-paper: #f4f1ec; /* warm off-white, ~40% */
+  --color-paper-sunk: #eae5dc; /* recessed panels on paper */
+  --color-depth: #2100b1; /* ambient bloom inside ink ONLY. never text/border/fill */
+  --color-accent: #ed4c00; /* ≤1% of visible ink. never a filled button */
+
+  --color-line: rgb(244 241 236 / 0.14); /* hairline on ink — structure without shadow */
+  --color-line-paper: rgb(2 0 53 / 0.12);
+  --color-muted: rgb(244 241 236 / 0.62);
+  --color-muted-paper: rgb(2 0 53 / 0.6);
+
+  /* Type scale — fluid, tight-set. §4.2 ─────────────────────── */
+  --text-display-xl: clamp(3.5rem, 8vw, 8rem);
+  --text-display-xl--line-height: 0.95;
+  --text-display-xl--letter-spacing: -0.02em;
+
+  --text-display-l: clamp(2.5rem, 5vw, 4.5rem);
+  --text-display-l--line-height: 1;
+  --text-display-l--letter-spacing: -0.02em;
+
+  --text-display-m: clamp(2rem, 3.5vw, 3rem);
+  --text-display-m--line-height: 1.05;
+  --text-display-m--letter-spacing: -0.015em;
+
+  --text-body-l: clamp(1.125rem, 1.5vw, 1.375rem);
+  --text-body-l--line-height: 1.5;
+
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.2;
+  --text-micro--letter-spacing: 0.14em;
+
+  /* Space — vertical rhythm is the luxury lever. §4.3 ───────── */
+  --spacing-section: clamp(8rem, 14vw, 14rem);
+  --spacing-gutter: clamp(1.25rem, 5vw, 6rem);
+  --spacing-measure: 68ch;
+
+  --container-frame: 1440px;
+
+  /* Motion — §4.4. No back/elastic/bounce anywhere. ─────────── */
+  --ease-micro: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-transition: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@theme inline {
+  --font-display: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+/* Base ─────────────────────────────────────────────────────── */
+
+@layer base {
+  html {
+    /* Lenis drives scroll; native smooth-scroll would fight it. */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* The serif carries the voice — never synthesise weight onto it. §4.2 */
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  /* Focus is never removed. §9 */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+  }
+}
+
+@layer utilities {
+  /* Body copy never exceeds 68ch. §4.2 */
+  .measure {
+    max-width: var(--spacing-measure);
+  }
+
+  /* Wipe-in underline, exits the way it came. §5.1 */
+  .link-wipe {
+    position: relative;
+  }
+  .link-wipe::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.15em;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s var(--ease-micro);
+  }
+  .link-wipe:hover::after,
+  .link-wipe:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* Reduced motion is a first-class path, not a degradation. §4.4
+   Every reveal must resolve to its final state — nothing stays hidden. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
