@@ -1,3 +1,4 @@
+import Link from "next/link";
 import RevealBlock from "@/components/motion/reveal-block";
 import RevealText from "@/components/motion/reveal-text";
 import { platforms } from "@/content/site";
@@ -35,6 +36,15 @@ export default function Recognition() {
               <p className="mt-2 text-sm text-muted">{platform.role}</p>
             </div>
           ))}
+        </RevealBlock>
+
+        <RevealBlock delay={0.2}>
+          <Link
+            href="/about"
+            className="link-wipe mt-16 inline-block text-sm font-medium"
+          >
+            Meet the firm
+          </Link>
         </RevealBlock>
       </div>
     </section>

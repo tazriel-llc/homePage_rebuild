@@ -32,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className={`${display.variable} ${sans.variable}`}>
       <body>
+        <div className="curtain" aria-hidden />
         <SmoothScroll />
         <a
           href="#main"

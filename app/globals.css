@@ -96,6 +96,35 @@
   }
 }
 
+@layer components {
+  /*
+   * Entrance curtain — the "curtain up" that otsuka-air.jp gets from a gated
+   * loading screen, without the cost of one.
+   *
+   * Pure CSS on purpose: no JavaScript means it cannot get stuck covering the
+   * page if a bundle fails, it adds nothing to LCP, and there is no artificial
+   * wait — it lifts off content that is already painted. `pointer-events: none`
+   * from the first frame, so it never intercepts a click even mid-animation.
+   * The global reduced-motion rule collapses it to instant.
+   */
+  .curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    background-color: var(--color-ink);
+    clip-path: inset(0 0 0 0);
+    animation: curtain-lift 1.1s var(--ease-transition) 0.15s forwards;
+  }
+
+  @keyframes curtain-lift {
+    to {
+      clip-path: inset(0 0 100% 0);
+      visibility: hidden;
+    }
+  }
+}
+
 @layer utilities {
   /* Body copy never exceeds 68ch. §4.2 */
   .measure {
