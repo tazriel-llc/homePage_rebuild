@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
 import SmoothScroll from "@/components/motion/smooth-scroll";
+import Nav from "@/components/layout/nav";
+import Footer from "@/components/layout/footer";
 import "./globals.css";
 
 const display = Instrument_Serif({
@@ -31,7 +33,15 @@ export default function RootLayout({
     <html lang="en" dir="ltr" className={`${display.variable} ${sans.variable}`}>
       <body>
         <SmoothScroll />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-60 focus:bg-paper focus:px-4 focus:py-2 focus:text-ink"
+        >
+          Skip to content
+        </a>
+        <Nav />
         {children}
+        <Footer />
       </body>
     </html>
   );

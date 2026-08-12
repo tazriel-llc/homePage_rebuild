@@ -366,16 +366,16 @@ public/
 
 ## 10. Assets
 
-Generated with Higgsfield MCP, art-directed to one consistent visual language.
+**No generated imagery.** The site ships with zero stock and zero synthetic imagery. Every ambient surface is produced in CSS and SVG at build time — nothing to license, nothing to download, nothing that dates.
 
-| Asset | Use | Direction |
+| Asset | Use | Approach |
 |---|---|---|
-| Hero ambient | Homepage hero background | Abstract, deep-navy, slow-moving depth. Suggests infrastructure and precision. No literal offices, no stock-photo handshakes, no floating UI panels. Must sit at low opacity behind text without harming contrast. |
-| Service imagery ×7 | Pinned service index | One abstract composition per service, unified in palette and grain so the seven read as a set. |
-| Capability textures | Horizontal capabilities track | Subtle material backgrounds, low contrast. |
-| OG image | Social sharing | 1200×630, wordmark on ink. |
+| Hero ambient | Homepage hero | Radial `--depth` bloom in CSS plus a fixed SVG grain overlay. Weighs nothing, scales to any viewport, never harms text contrast. |
+| Service index | Pinned service sequence | **Typographic, not photographic.** Oversized serif index numerals, hairline rules, and the depth bloom. An abstract stock composition per service would have read as filler; large type on a near-black field reads as expensive. |
+| Capability track | Horizontal capabilities | Hairline-ruled cards on `--ink-raised`. Partner wordmarks only where Tazriel holds a verifiable relationship. |
+| OG image | Social sharing | 1200×630, generated at build time via `next/og` — wordmark on ink. |
 
-Photography of the actual team is required for the About page and the homepage talent section. This cannot be generated — it must be real people, and the section does not ship with synthetic faces standing in for staff. Flagged as a content dependency on Tazriel.
+Photography of the actual team remains required for the About page and the homepage talent section. It must be real people; the site will not ship synthetic or stock faces standing in for staff. Until it lands, those sections ship as a typographic roster (name, discipline, years in platform) with no portraits — which is honest and still reads well. Content dependency on Tazriel, tracked in §13.
 
 ---
 
