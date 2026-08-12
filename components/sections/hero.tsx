@@ -2,7 +2,9 @@ import Link from "next/link";
 import RevealText from "@/components/motion/reveal-text";
 import RevealBlock from "@/components/motion/reveal-block";
 import Magnetic from "@/components/motion/magnetic";
+import ImageField from "@/components/motion/image-field";
 import { company } from "@/content/site";
+import { heroMedia } from "@/content/media";
 
 /**
  * One idea, one action. No stat cards, no secondary CTA, no scroll hint —
@@ -11,6 +13,8 @@ import { company } from "@/content/site";
 export default function Hero() {
   return (
     <section className="relative flex min-h-svh items-center overflow-hidden px-gutter pb-section pt-40">
+      <ImageField shards={heroMedia} zoom={false} />
+
       <div
         aria-hidden
         className="pointer-events-none absolute -top-1/4 left-1/5 h-[75vw] w-[75vw] rounded-full opacity-25 blur-[130px]"
@@ -20,7 +24,12 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative mx-auto w-full max-w-frame">
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/30"
+      />
+
+      <div className="relative z-10 mx-auto w-full max-w-frame">
         <RevealBlock>
           <p className="mb-10 text-micro font-medium uppercase text-accent">
             Global operations — two continents

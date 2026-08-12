@@ -32,10 +32,13 @@ export default function ServiceIndex() {
       const q = gsap.utils.selector(root);
       const panels = q("[data-svc]");
       const numerals = q("[data-num]");
+      const shots = q("[data-shot]");
 
       gsap.set(panels, { opacity: 0, yPercent: 8 });
       gsap.set(numerals, { opacity: 0, yPercent: 20 });
+      gsap.set(shots, { opacity: 0, scale: 1.06 });
       gsap.set([panels[0], numerals[0]], { opacity: 1, yPercent: 0 });
+      gsap.set(shots[0], { opacity: 1, scale: 1 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -58,11 +61,18 @@ export default function ServiceIndex() {
           [panels[i - 1], numerals[i - 1]],
           { opacity: 0, yPercent: -8, duration: 0.5 },
           i - 1,
-        ).to(
-          [panels[i], numerals[i]],
-          { opacity: 1, yPercent: 0, duration: 0.5 },
-          i - 0.5,
-        );
+        )
+          .to(
+            shots[i - 1],
+            { opacity: 0, scale: 0.96, duration: 0.5 },
+            i - 1,
+          )
+          .to(
+            [panels[i], numerals[i]],
+            { opacity: 1, yPercent: 0, duration: 0.5 },
+            i - 0.5,
+          )
+          .to(shots[i], { opacity: 1, scale: 1, duration: 0.5 }, i - 0.5);
       }
 
       tl.fromTo(
@@ -100,8 +110,8 @@ export default function ServiceIndex() {
 
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-0">
             {stacked && (
-              <div className="relative col-span-4 flex items-center gap-8">
-                <div aria-hidden className="relative h-48 w-px shrink-0 bg-line">
+              <div className="relative col-span-3 flex items-center gap-6">
+                <div aria-hidden className="relative h-44 w-px shrink-0 bg-line">
                   <span
                     data-rail
                     className="absolute inset-x-0 top-0 h-full origin-top bg-accent"
@@ -112,7 +122,7 @@ export default function ServiceIndex() {
                     <span
                       key={s.slug}
                       data-num
-                      className="absolute left-0 top-0 font-display text-[clamp(5rem,11vw,10rem)] leading-none text-paper/15"
+                      className="absolute left-0 top-0 font-display text-[clamp(4rem,7vw,7rem)] leading-none text-paper/15"
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -124,7 +134,7 @@ export default function ServiceIndex() {
             <div
               className={
                 stacked
-                  ? "relative col-span-8 h-64"
+                  ? "relative col-span-5 h-64"
                   : "col-span-full border-t border-line"
               }
             >
@@ -164,6 +174,37 @@ export default function ServiceIndex() {
                 </article>
               ))}
             </div>
+
+            {/* One photograph per discipline, crossfading with its panel.
+                Desktop only — on the mobile flow list it would be dead weight. */}
+            {stacked && (
+              <div
+                aria-hidden
+                className="relative col-span-4 h-[26rem] overflow-hidden"
+              >
+                {liveServices.map((service) => (
+                  <figure
+                    key={service.slug}
+                    data-shot
+                    className="absolute inset-0 isolate"
+                  >
+                    <img
+                      src={`/media/${service.slug}-1280.webp`}
+                      srcSet={`/media/${service.slug}-640.webp 640w, /media/${service.slug}-1280.webp 1280w`}
+                      sizes="33vw"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="size-full object-cover grayscale"
+                    />
+                    {/* Same navy duotone as the collage, so the whole page
+                        reads as one set of photography. */}
+                    <span className="absolute inset-0 bg-depth mix-blend-color" />
+                    <span className="absolute inset-0 bg-ink/25" />
+                  </figure>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

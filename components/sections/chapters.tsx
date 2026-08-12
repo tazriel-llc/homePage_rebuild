@@ -1,4 +1,10 @@
 import Chapter from "@/components/motion/chapter";
+import {
+  stakesMedia,
+  problemMedia,
+  mechanismMedia,
+  answerMedia,
+} from "@/content/media";
 
 /**
  * The narrative spine. Four chapters, in dependency order — 03 only lands if
@@ -13,7 +19,11 @@ import Chapter from "@/components/motion/chapter";
 
 export function ChapterStakes() {
   return (
-    <Chapter index={1} label="What this actually runs on">
+    <Chapter
+      index={1}
+      label="What this actually runs on"
+      media={stakesMedia}
+    >
       <h2 id="chapter-1" data-beat className="max-w-[16ch] text-display-l">
         Every operation you run is somebody&rsquo;s full attention.
       </h2>
@@ -27,7 +37,11 @@ export function ChapterStakes() {
 
 export function ChapterProblem() {
   return (
-    <Chapter index={2} label="Why it went wrong last time">
+    <Chapter
+      index={2}
+      label="Why it went wrong last time"
+      media={problemMedia}
+    >
       <h2 id="chapter-2" data-beat className="max-w-[18ch] text-display-l">
         Outsourcing sold you capacity. Capacity is not{" "}
         <em className="italic">judgement</em>.
@@ -44,7 +58,12 @@ export function ChapterProblem() {
 /** The turn. The only chapter on paper — the light comes on here. */
 export function ChapterMechanism() {
   return (
-    <Chapter index={3} label="The variable that actually moves" field="paper">
+    <Chapter
+      index={3}
+      label="The variable that actually moves"
+      field="paper"
+      media={mechanismMedia}
+    >
       <h2 id="chapter-3" data-beat className="max-w-[18ch] text-display-l">
         It was never how many. It was whether they had{" "}
         <em className="italic">done it before</em>.
@@ -60,7 +79,7 @@ export function ChapterMechanism() {
 
 export function ChapterAnswer() {
   return (
-    <Chapter index={4} label="What we built instead">
+    <Chapter index={4} label="What we built instead" media={answerMedia}>
       <h2 id="chapter-4" data-beat className="max-w-[16ch] text-display-l">
         Senior operators, embedded, on two continents.
       </h2>

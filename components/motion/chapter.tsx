@@ -3,6 +3,7 @@
 import { useRef, type ReactNode } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import ImageField, { type Shard } from "@/components/motion/image-field";
 
 type Props = {
   index: number;
@@ -10,6 +11,8 @@ type Props = {
   field?: "ink" | "paper";
   /** Scroll runway in svh. Longer = the beat holds longer before it exits. */
   runway?: number;
+  /** Decorative photographic collage behind the beat. */
+  media?: Shard[];
   children: ReactNode;
 };
 
@@ -37,6 +40,7 @@ export default function Chapter({
   label,
   field = "ink",
   runway = 260,
+  media,
   children,
 }: Props) {
   const root = useRef<HTMLElement>(null);
@@ -94,13 +98,28 @@ export default function Chapter({
       style={reduced ? undefined : { height: `${runway}svh` }}
     >
       <div
-        className={
+        className={`relative overflow-hidden ${
           reduced
             ? "px-gutter py-section"
-            : "sticky top-0 flex h-svh items-center overflow-hidden px-gutter"
-        }
+            : "sticky top-0 flex h-svh items-center px-gutter"
+        }`}
       >
-        <div className="mx-auto w-full max-w-frame">
+        {media && (
+          <>
+            <ImageField shards={media} tint={paper ? "ink" : "depth"} />
+            {/* Scrim. Photography never gets to compete with the sentence. */}
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute inset-0 bg-gradient-to-r ${
+                paper
+                  ? "from-paper via-paper/85 to-paper/40"
+                  : "from-ink via-ink/85 to-ink/40"
+              }`}
+            />
+          </>
+        )}
+
+        <div className="relative z-10 mx-auto w-full max-w-frame">
           <p
             data-beat
             className="mb-10 flex items-center gap-4 text-micro font-medium uppercase"
