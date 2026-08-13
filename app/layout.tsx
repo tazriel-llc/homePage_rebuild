@@ -30,7 +30,17 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" dir="ltr" className={`${display.variable} ${sans.variable}`}>
+    // Browser extensions stamp attributes onto <html> before React hydrates
+    // (data-xt-extension-active, Grammarly, dark-mode forcers). That is not our
+    // markup and we cannot prevent it. This suppresses the warning for THIS
+    // element's attributes only — one level deep — so genuine mismatches
+    // anywhere inside the tree still surface.
+    <html
+      lang="en"
+      dir="ltr"
+      className={`${display.variable} ${sans.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <div className="curtain" aria-hidden />
         <SmoothScroll />

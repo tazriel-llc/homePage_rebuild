@@ -58,8 +58,14 @@ export default function PlatformStack() {
       // rotation tween below cannot fight a competing CSS transform.
       gsap.set(stack, { rotateX: 58, rotateZ: -28 });
 
-      const START = 0.16; // block stays solid until here
-      const GATE = 0.8; // layers are read between START and here; then fly through
+      /* Distance between layers along Z. With perspective 1500 this puts the
+       * deepest layer at ~0.4 scale — far enough to read as a corridor, near
+       * enough to still be legible. */
+      const SPACING = 380;
+      const EXPLODE = 0.13; // solid block opens into a corridor
+      const FACE = 0.22; // camera squares up to the corridor mouth
+      const GATE = 0.84; // last layer reached; fly out into the next section
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
@@ -69,11 +75,11 @@ export default function PlatformStack() {
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const next =
-              self.progress < START
+              self.progress < FACE
                 ? -1
                 : Math.min(
                     n - 1,
-                    Math.floor((self.progress - START) / ((GATE - START) / n)),
+                    Math.floor((self.progress - FACE) / ((GATE - FACE) / n)),
                   );
             // onUpdate runs every scroll frame; only re-render on a real change.
             if (next !== activeRef.current) {
@@ -84,45 +90,58 @@ export default function PlatformStack() {
         },
       });
 
-      // MI-1 — the block comes apart.
+      // MI-1 — the solid block opens into a corridor running away from camera.
       tl.fromTo(
         plates,
         { z: 0 },
         {
-          z: (i: number) => (i - (n - 1) / 2) * 118,
+          z: (i: number) => -(i + 1) * SPACING,
           ease: "power2.out",
-          duration: START,
+          duration: EXPLODE,
           stagger: 0.015,
         },
         0,
       );
 
-      // MI-3 — and turns toward the viewer while the layers are read.
+      // MI-3 — the diagram turns square-on, and becomes a corridor to enter.
       tl.to(
         stack,
-        { rotateX: 44, rotateZ: -8, ease: "none", duration: GATE - START },
-        START,
+        { rotateX: 0, rotateZ: 0, ease: "none", duration: FACE - EXPLODE },
+        EXPLODE,
       );
 
-      /* MI-4 Fly through — the camera moves into the stack.
+      /* MI-4 Dolly — the camera travels the whole corridor, passing every layer.
        *
-       * Linear throughout, as requested: with a scrub this literal, any easing
-       * reads as the page fighting the scroll wheel rather than tracking it.
+       * Layer i sits exactly on the camera plane once the stack has travelled
+       * (i+1) * SPACING, so all six are flown through in turn rather than one
+       * zoom at the end.
        *
-       * The portal is the same paper as the section ground and as the section
-       * that follows, so when it finishes opening there is no cut — the pin
-       * simply releases onto matching ground and the next section continues.
+       * Linear throughout, as specified: with a scrub this literal any easing
+       * reads as the page fighting the wheel rather than tracking it.
        */
-      tl.to(stack, { rotateX: 0, rotateZ: 0, ease: "none", duration: 0.05 }, GATE)
-        .to(plates, { z: 0, ease: "none", duration: 0.05 }, GATE)
-        .to(copy, { opacity: 0, ease: "none", duration: 0.05 }, GATE)
-        // Past ~14x the front plate has long left the viewport — that is the
-        // moment the camera is "inside" it.
-        .to(stack, { scale: 15, ease: "none", duration: 0.2 }, GATE)
+      tl.to(
+        stack,
+        { z: n * SPACING, ease: "none", duration: GATE - FACE },
+        FACE,
+      );
+
+      /* Gate — the camera does not stop at the last layer, it keeps going
+       * through it. z lands 1250 short of the 1500 perspective origin, which is
+       * ~6x scale: the plate fills the viewport and passes.
+       *
+       * The portal is the same paper as this section's ground and as the
+       * section after it, so when it finishes opening there is no cut — the pin
+       * releases onto matching ground and the next section continues. */
+      tl.to(
+        stack,
+        { z: n * SPACING + 1250, ease: "none", duration: 1 - GATE },
+        GATE,
+      )
+        .to(copy, { opacity: 0, ease: "none", duration: 0.06 }, GATE)
         .fromTo(
           portal,
           { clipPath: "inset(50% 50% 50% 50%)" },
-          { clipPath: "inset(0% 0% 0% 0%)", ease: "none", duration: 0.13 },
+          { clipPath: "inset(0% 0% 0% 0%)", ease: "none", duration: 0.11 },
           GATE + 0.05,
         );
     },
@@ -244,10 +263,18 @@ export default function PlatformStack() {
                 <div
                   key={platform.name}
                   data-plate
+                  /* Four states along the corridor: the whole diagram before
+                     the camera enters, then ahead / on the camera plane /
+                     already passed. Passed layers clear out so they cannot
+                     smear across the ones still coming. */
                   className={`absolute inset-0 isolate overflow-hidden border transition-[opacity,border-color] duration-500 ${
-                    active === i
-                      ? "border-accent opacity-100"
-                      : "border-line-paper opacity-30"
+                    active < 0
+                      ? "border-line-paper opacity-70"
+                      : i === active
+                        ? "border-accent opacity-100"
+                        : i < active
+                          ? "border-line-paper opacity-0"
+                          : "border-line-paper opacity-25"
                   }`}
                   style={{ transformStyle: "preserve-3d" }}
                 >
