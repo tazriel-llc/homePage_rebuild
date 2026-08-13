@@ -8,7 +8,7 @@ import {
   ChapterAnswer,
 } from "@/components/sections/chapters";
 import ServiceIndex from "@/components/sections/service-index";
-import Capabilities from "@/components/sections/capabilities";
+import PlatformStack from "@/components/sections/platform-stack";
 import Process from "@/components/sections/process";
 import Recognition from "@/components/sections/recognition";
 import ContactCta from "@/components/sections/contact-cta";
@@ -36,7 +36,7 @@ export default function Home() {
         <ChapterAnswer />
 
         <ServiceIndex />
-        <Capabilities />
+        <PlatformStack />
         <Process />
         <Recognition />
         <ContactCta />

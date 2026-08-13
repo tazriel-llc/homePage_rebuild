@@ -96,13 +96,52 @@ export const services: Service[] = [
 
 export const liveServices = services.filter((s) => !s.dormant);
 
+/**
+ * The layers of the stack, ordered outermost (what the business touches) to
+ * innermost (what it runs on). That order is what the exploded view walks
+ * through, so it is deliberate rather than alphabetical.
+ *
+ * `note` is the one-line reason Tazriel is in that layer at all.
+ * `image` points at /public/media — reused photography, not a partner logo, so
+ * nothing here implies a certification Tazriel has not evidenced. PRD §13.3.
+ */
 export const platforms = [
-  { name: "Cvent", role: "Event management" },
-  { name: "Mendix", role: "Low-code application development" },
-  { name: "Microsoft 365", role: "Tenant and security administration" },
-  { name: "Power Platform", role: "Process automation" },
-  { name: "HubSpot Service Hub", role: "Support operations" },
-  { name: "Cisco Meraki", role: "Network operations" },
+  {
+    name: "Cvent",
+    role: "Event management",
+    note: "Registration logic built and path-tested before it opens.",
+    image: "meetings-and-events",
+  },
+  {
+    name: "HubSpot Service Hub",
+    role: "Support operations",
+    note: "Queues, routing, and the reporting your roadmap depends on.",
+    image: "saas-product-support",
+  },
+  {
+    name: "Mendix",
+    role: "Low-code application development",
+    note: "Applications shipped inside your governance, not around it.",
+    image: "software-development",
+  },
+  {
+    name: "Power Platform",
+    role: "Process automation",
+    note: "The manual steps between systems, removed.",
+    image: "marketing-and-digital-services",
+  },
+  {
+    name: "Microsoft 365",
+    role: "Tenant and security administration",
+    note: "Identity, conditional access, and licence drift held in check.",
+    image: "microsoft-365-administration",
+  },
+  {
+    name: "Cisco Meraki",
+    role: "Network operations",
+    note: "The layer everything above it quietly assumes is working.",
+    image: "it-helpdesk",
+  },
 ] as const;
 
 export const nav = [
