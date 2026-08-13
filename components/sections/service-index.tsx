@@ -137,7 +137,7 @@ export default function ServiceIndex() {
                   decoding="async"
                   className="absolute inset-0 -z-10 size-full object-cover grayscale"
                 />
-                <span className="absolute inset-0 -z-10 bg-depth mix-blend-color" />
+                <span className="absolute inset-0 -z-10 bg-ink/75 mix-blend-color" />
                 <span className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/70 to-ink/20" />
 
                 <span className="text-micro font-medium uppercase text-accent">
@@ -190,7 +190,7 @@ export default function ServiceIndex() {
               }`}
             />
             <span
-              className={`absolute inset-0 bg-depth mix-blend-color transition-opacity duration-700 ease-out ${
+              className={`absolute inset-0 bg-ink/75 mix-blend-color transition-opacity duration-700 ease-out ${
                 warm ? "opacity-0" : "opacity-100"
               }`}
             />

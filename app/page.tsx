@@ -1,4 +1,3 @@
-import Grain from "@/components/ui/grain";
 import ChapterRail from "@/components/motion/chapter-rail";
 import Hero from "@/components/sections/hero";
 import {
@@ -25,7 +24,6 @@ import ContactCta from "@/components/sections/contact-cta";
 export default function Home() {
   return (
     <>
-      <Grain />
       <ChapterRail />
       <main id="main">
         <Hero />

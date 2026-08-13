@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Grain from "@/components/ui/grain";
 import RevealText from "@/components/motion/reveal-text";
 import RevealBlock from "@/components/motion/reveal-block";
 import ContactCta from "@/components/sections/contact-cta";
@@ -57,7 +56,6 @@ export default async function ServicePage({ params }: Params) {
 
   return (
     <>
-      <Grain />
       <main id="main">
         {/* 1 — Hero */}
         <section className="relative overflow-hidden px-gutter pb-section pt-48">
