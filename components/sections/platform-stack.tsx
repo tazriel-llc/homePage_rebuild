@@ -51,12 +51,15 @@ export default function PlatformStack() {
       const q = gsap.utils.selector(root);
       const stack = q("[data-stack]");
       const plates = q("[data-plate]");
+      const copy = q("[data-copy]");
+      const portal = q("[data-portal]");
 
       // The resting pose. GSAP owns this element's transform outright so the
       // rotation tween below cannot fight a competing CSS transform.
       gsap.set(stack, { rotateX: 58, rotateZ: -28 });
 
-      const START = 0.22; // block stays solid until here
+      const START = 0.16; // block stays solid until here
+      const GATE = 0.8; // layers are read between START and here; then fly through
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
@@ -70,7 +73,7 @@ export default function PlatformStack() {
                 ? -1
                 : Math.min(
                     n - 1,
-                    Math.floor((self.progress - START) / ((1 - START) / n)),
+                    Math.floor((self.progress - START) / ((GATE - START) / n)),
                   );
             // onUpdate runs every scroll frame; only re-render on a real change.
             if (next !== activeRef.current) {
@@ -97,9 +100,31 @@ export default function PlatformStack() {
       // MI-3 — and turns toward the viewer while the layers are read.
       tl.to(
         stack,
-        { rotateX: 44, rotateZ: -8, ease: "none", duration: 1 - START },
+        { rotateX: 44, rotateZ: -8, ease: "none", duration: GATE - START },
         START,
       );
+
+      /* MI-4 Fly through — the camera moves into the stack.
+       *
+       * Linear throughout, as requested: with a scrub this literal, any easing
+       * reads as the page fighting the scroll wheel rather than tracking it.
+       *
+       * The portal is the same paper as the section ground and as the section
+       * that follows, so when it finishes opening there is no cut — the pin
+       * simply releases onto matching ground and the next section continues.
+       */
+      tl.to(stack, { rotateX: 0, rotateZ: 0, ease: "none", duration: 0.05 }, GATE)
+        .to(plates, { z: 0, ease: "none", duration: 0.05 }, GATE)
+        .to(copy, { opacity: 0, ease: "none", duration: 0.05 }, GATE)
+        // Past ~14x the front plate has long left the viewport — that is the
+        // moment the camera is "inside" it.
+        .to(stack, { scale: 15, ease: "none", duration: 0.2 }, GATE)
+        .fromTo(
+          portal,
+          { clipPath: "inset(50% 50% 50% 50%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", ease: "none", duration: 0.13 },
+          GATE + 0.05,
+        );
     },
     { scope: root, dependencies: [cinematic, n], revertOnUpdate: true },
   );
@@ -148,12 +173,24 @@ export default function PlatformStack() {
       ref={root}
       data-field="paper"
       className="bg-paper text-ink"
-      style={{ height: `${(n + 2) * 90}svh` }}
+      // Runway covers the explode, the walk, and the fly-through gate.
+      style={{ height: `${(n + 4) * 90}svh` }}
     >
       <div className="sticky top-0 flex h-svh items-center overflow-hidden px-gutter">
+        {/* The far side of the doorway. Opens from the centre as the camera
+            passes through the stack, and is the same paper as both this
+            section and the one after it — so the pin releases onto matching
+            ground with no cut. */}
+        <div
+          data-portal
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-20 bg-paper"
+          style={{ clipPath: "inset(50% 50% 50% 50%)" }}
+        />
+
         <div className="mx-auto grid w-full max-w-frame grid-cols-12 items-center gap-8">
           {/* Upright text. Never rotated — the 3D is the diagram, not the copy. */}
-          <div className="col-span-5">
+          <div data-copy className="col-span-5">
             <p className="mb-6 text-micro font-medium uppercase text-accent">
               Platform depth
             </p>
