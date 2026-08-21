@@ -161,7 +161,7 @@ export default function ServiceIndex() {
       ref={root}
       id="disciplines"
       className="bg-ink"
-      style={{ height: `${(steps + 1) * 90}svh` }}
+      style={{ height: `${(steps + 1) * 62}svh` }}
     >
       <div
         className="sticky top-0 h-svh overflow-hidden"

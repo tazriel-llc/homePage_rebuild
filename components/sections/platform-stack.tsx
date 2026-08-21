@@ -225,7 +225,7 @@ export default function PlatformStack() {
       ref={root}
       data-field="paper"
       className="bg-paper text-ink"
-      style={{ height: `${(n + 2) * 80}svh` }}
+      style={{ height: `${(n + 2) * 58}svh` }}
     >
       <div className="sticky top-0 h-svh overflow-hidden">
         {/* Stage. Full-bleed, so perspective-origin is the viewport centre. */}
@@ -257,7 +257,7 @@ export default function PlatformStack() {
                   data-plate
                   className={`absolute inset-0 isolate overflow-hidden border transition-[opacity,border-color] duration-300 ${
                     {
-                      diagram: "border-line-paper opacity-70",
+                      diagram: "border-line-paper opacity-90",
                       on: "border-accent opacity-100",
                       passing: "border-line-paper opacity-0",
                       /* display:none, not visibility:hidden. A passed plate
@@ -282,7 +282,7 @@ export default function PlatformStack() {
                   <span className="absolute inset-0 bg-ink/75 mix-blend-color" />
                   <span
                     className={`absolute inset-0 transition-colors duration-300 ${
-                      state === "on" ? "bg-ink/20" : "bg-paper/60"
+                      state === "on" ? "bg-ink/20" : "bg-paper/35"
                     }`}
                   />
                   <span className="absolute bottom-4 left-5 font-display text-5xl leading-none text-paper/80">

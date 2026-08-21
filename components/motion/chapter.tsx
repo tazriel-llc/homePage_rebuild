@@ -39,7 +39,7 @@ export default function Chapter({
   index,
   label,
   field = "ink",
-  runway = 260,
+  runway = 165,
   media,
   children,
 }: Props) {
@@ -65,19 +65,27 @@ export default function Chapter({
         },
       });
 
+      /* Ratio matters more than the numbers. Entry and exit are deliberately
+       * short and the hold is long, because this timeline is scrubbed across
+       * the WHOLE section: any scroll spent entering or leaving is scroll spent
+       * looking at a half-empty viewport.
+       *
+       * Previously 1 / 1.8 / 0.9 — the beat was not fully in until 27% of the
+       * section and had left again by 76%, so roughly a third of every chapter
+       * was blank. Now in by 11%, out after 89%. */
       tl.to(beats, {
         yPercent: 0,
         opacity: 1,
-        duration: 1,
-        stagger: 0.08,
+        duration: 0.5,
+        stagger: 0.05,
         ease: "expo.out",
       })
-        .to({}, { duration: 1.8 }) // the hold — where the beat is actually read
+        .to({}, { duration: 3.4 }) // the hold — where the beat is actually read
         .to(beats, {
-          yPercent: -28,
+          yPercent: -22,
           opacity: 0,
-          duration: 0.9,
-          stagger: 0.05,
+          duration: 0.5,
+          stagger: 0.04,
           ease: "power2.in",
         });
     },
