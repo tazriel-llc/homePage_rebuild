@@ -2,15 +2,31 @@ import Link from "next/link";
 import RevealText from "@/components/motion/reveal-text";
 import RevealBlock from "@/components/motion/reveal-block";
 import Magnetic from "@/components/motion/magnetic";
+import CineMedia from "@/components/motion/cine-media";
+import { closingVideo, videoPoster } from "@/content/media";
 
 /** Oversized invitation, one action. §7.1 */
 export default function ContactCta() {
   return (
     <section
       data-field="paper"
-      className="flex min-h-[80svh] items-center bg-paper px-gutter py-section text-ink"
+      className="relative flex min-h-[80svh] items-center overflow-hidden bg-paper px-gutter py-section text-ink"
     >
-      <div className="mx-auto w-full max-w-frame">
+      {closingVideo && (
+        <>
+          <CineMedia
+            video={closingVideo}
+            poster={videoPoster[closingVideo]}
+            tint={0.55}
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-paper via-paper/88 to-paper/45"
+          />
+        </>
+      )}
+
+      <div className="relative z-10 mx-auto w-full max-w-frame">
         <RevealText as="h2" className="max-w-[12ch] text-display-xl">
           Tell us what isn&rsquo;t working.
         </RevealText>

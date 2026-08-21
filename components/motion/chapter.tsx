@@ -4,6 +4,8 @@ import { useRef, type ReactNode } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import ImageField, { type Shard } from "@/components/motion/image-field";
+import CineMedia from "@/components/motion/cine-media";
+import { videoPoster } from "@/content/media";
 
 type Props = {
   index: number;
@@ -11,7 +13,13 @@ type Props = {
   field?: "ink" | "paper";
   /** Scroll runway in svh. Longer = the beat holds longer before it exits. */
   runway?: number;
-  /** Decorative photographic collage behind the beat. */
+  /**
+   * Basename in /public/media/video. When present it replaces the collage
+   * outright rather than layering over it — the scattered stills were standing
+   * in for footage we did not have, and running both is noise.
+   */
+  video?: string;
+  /** Decorative photographic collage, used when there is no clip. */
   media?: Shard[];
   children: ReactNode;
 };
@@ -40,6 +48,7 @@ export default function Chapter({
   label,
   field = "ink",
   runway = 165,
+  video,
   media,
   children,
 }: Props) {
@@ -112,18 +121,37 @@ export default function Chapter({
             : "sticky top-0 flex h-svh items-center px-gutter"
         }`}
       >
-        {media && (
+        {(video || media) && (
           <>
-            <ImageField shards={media} tint={paper ? "ink" : "depth"} />
-            {/* Scrim. Photography never gets to compete with the sentence. */}
+            {video ? (
+              <CineMedia
+                video={video}
+                poster={videoPoster[video]}
+                tint={paper ? 0.45 : 0.8}
+              />
+            ) : (
+              <ImageField shards={media!} tint={paper ? "ink" : "depth"} />
+            )}
+
+            {/* Scrim. Footage never gets to compete with the sentence. Two
+                gradients, not one: the horizontal keeps the type side solid,
+                the vertical stops a bright frame washing out the eyebrow. */}
             <span
               aria-hidden
               className={`pointer-events-none absolute inset-0 bg-gradient-to-r ${
                 paper
-                  ? "from-paper via-paper/85 to-paper/40"
+                  ? "from-paper via-paper/80 to-paper/25"
                   : "from-ink via-ink/85 to-ink/40"
               }`}
             />
+            {/* Ink only. On paper the horizontal scrim already carries enough
+                and a second one stacks into near-white, erasing the footage. */}
+            {!paper && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 to-ink/20"
+              />
+            )}
           </>
         )}
 

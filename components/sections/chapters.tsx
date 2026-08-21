@@ -4,6 +4,7 @@ import {
   problemMedia,
   mechanismMedia,
   answerMedia,
+  chapterVideo,
 } from "@/content/media";
 
 /**
@@ -22,6 +23,7 @@ export function ChapterStakes() {
     <Chapter
       index={1}
       label="What this actually runs on"
+      video={chapterVideo[1]}
       media={stakesMedia}
     >
       <h2 id="chapter-1" data-beat className="max-w-[16ch] text-display-l">
@@ -40,6 +42,7 @@ export function ChapterProblem() {
     <Chapter
       index={2}
       label="Why it went wrong last time"
+      video={chapterVideo[2]}
       media={problemMedia}
     >
       <h2 id="chapter-2" data-beat className="max-w-[18ch] text-display-l">
@@ -62,6 +65,7 @@ export function ChapterMechanism() {
       index={3}
       label="The variable that actually moves"
       field="paper"
+      video={chapterVideo[3]}
       media={mechanismMedia}
     >
       <h2 id="chapter-3" data-beat className="max-w-[18ch] text-display-l">
@@ -79,7 +83,7 @@ export function ChapterMechanism() {
 
 export function ChapterAnswer() {
   return (
-    <Chapter index={4} label="What we built instead" media={answerMedia}>
+    <Chapter index={4} label="What we built instead" video={chapterVideo[4]} media={answerMedia}>
       <h2 id="chapter-4" data-beat className="max-w-[16ch] text-display-l">
         Senior operators, embedded, on two continents.
       </h2>

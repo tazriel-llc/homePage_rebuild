@@ -60,14 +60,24 @@ export const answerMedia: Shard[] = [
  * opacity under the navy duotone, so 1080p would buy nothing a visitor could
  * see and cost roughly double.
  */
-export const heroVideo: string | undefined = undefined; // "hero-entrance"
+export const heroVideo: string | undefined = "hero-entrance";
 export const chapterVideo: Record<number, string | undefined> = {
-  1: undefined, // "ch01-stakes"
-  2: undefined, // "ch02-problem"
-  3: undefined, // "ch03-mechanism"
-  4: undefined, // "ch04-answer"
+  1: "ch01-stakes",
+  2: "ch02-problem",
+  3: "ch03-mechanism",
+  4: "ch04-answer",
 };
-export const closingVideo: string | undefined = undefined; // "closing"
+export const closingVideo: string | undefined = "closing";
+
+/** Poster still per slot — the first painted frame, chosen to match the clip. */
+export const videoPoster: Record<string, string> = {
+  "hero-entrance": "it-helpdesk",
+  "ch01-stakes": "software-development",
+  "ch02-problem": "saas-product-support",
+  "ch03-mechanism": "microsoft-365-administration",
+  "ch04-answer": "meetings-and-events",
+  closing: "marketing-and-digital-services",
+};
 
 /** Hero — restrained. It is the first thing seen, not the loudest. */
 export const heroMedia: Shard[] = [
