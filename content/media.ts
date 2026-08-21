@@ -45,6 +45,30 @@ export const answerMedia: Shard[] = [
   { src: "saas-product-support", x: 66, y: 78, w: 16, rotate: 2, depth: 0.7, opacity: 0.18 },
 ];
 
+/* ── Video slots ────────────────────────────────────────────────────────────
+ *
+ * Six clips, the whole budget, allocated to the narrative spine rather than
+ * sprinkled around: the entrance, the four chapters, and the closing invitation.
+ *
+ * Each name is the basename of an .mp4 in /public/media/video. `undefined`
+ * means the slot renders its poster still and nothing else — the site is fully
+ * designed and shippable with every slot empty, and each clip drops in with a
+ * one-word change here. Never leave a slot pointing at a file that does not
+ * exist: that costs a failed request per view for no visible gain.
+ *
+ * Generated at 720p on purpose. Every clip sits behind a scrim at reduced
+ * opacity under the navy duotone, so 1080p would buy nothing a visitor could
+ * see and cost roughly double.
+ */
+export const heroVideo: string | undefined = undefined; // "hero-entrance"
+export const chapterVideo: Record<number, string | undefined> = {
+  1: undefined, // "ch01-stakes"
+  2: undefined, // "ch02-problem"
+  3: undefined, // "ch03-mechanism"
+  4: undefined, // "ch04-answer"
+};
+export const closingVideo: string | undefined = undefined; // "closing"
+
 /** Hero — restrained. It is the first thing seen, not the loudest. */
 export const heroMedia: Shard[] = [
   { src: "it-helpdesk", x: 62, y: 20, w: 26, rotate: -2, depth: 0.7, opacity: 0.28 },

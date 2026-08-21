@@ -1,35 +1,89 @@
+"use client";
+
+import { useRef } from "react";
 import Link from "next/link";
+import { gsap, useGSAP, EASE } from "@/lib/gsap";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import RevealText from "@/components/motion/reveal-text";
 import RevealBlock from "@/components/motion/reveal-block";
 import Magnetic from "@/components/motion/magnetic";
-import ImageField from "@/components/motion/image-field";
+import CineMedia from "@/components/motion/cine-media";
 import { company } from "@/content/site";
-import { heroMedia } from "@/content/media";
+import { heroVideo } from "@/content/media";
 
 /**
- * One idea, one action. No stat cards, no secondary CTA, no scroll hint —
- * every one of those was on the old hero and every one diluted it. §7.1
+ * Cinematic entrance. One idea, one action — no stat cards, no secondary CTA,
+ * no scroll hint. Every one of those was on the old hero and every one diluted
+ * it. §7.1
+ *
+ * Two motions, deliberately different in kind:
+ *
+ * MI-1 Settle — trigger: load, once the curtain has lifted. Rules: the plate
+ *   eases from 1.16 to 1.0 over 1.8s while the headline masks in line by line.
+ *   Feedback: the frame arrives rather than appears. Not scrubbed — an entrance
+ *   the visitor can scrub is not an entrance.
+ * MI-2 Depart — trigger: scrolling out of the hero. Rules: the plate pushes to
+ *   1.14 while the copy lifts and fades. Feedback: scrubbed and reversible, so
+ *   scrolling back restores the frame exactly.
+ *
+ * Under reduced motion neither runs, no clip is mounted, and the hero renders
+ * as a still frame with type at full opacity.
  */
 export default function Hero() {
-  return (
-    <section className="relative flex min-h-svh items-center overflow-hidden px-gutter pb-section pt-40">
-      <ImageField shards={heroMedia} zoom={false} />
+  const root = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
 
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-1/4 left-1/5 h-[75vw] w-[75vw] rounded-full opacity-25 blur-[130px]"
-        style={{
-          background:
-            "radial-gradient(circle, var(--color-depth) 0%, transparent 65%)",
-        }}
-      />
+  useGSAP(
+    () => {
+      if (reduced || !root.current) return;
+
+      const q = gsap.utils.selector(root);
+      const plate = q("[data-plate]");
+      const copy = q("[data-copy]");
+
+      // MI-1 — starts after the 1.1s CSS curtain has cleared the frame.
+      gsap.fromTo(
+        plate,
+        { scale: 1.16 },
+        { scale: 1, duration: 1.8, ease: EASE.reveal, delay: 0.35 },
+      );
+
+      // MI-2 — transform and opacity only; never the layout box.
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+          },
+        })
+        .to(plate, { scale: 1.14, ease: "none" }, 0)
+        .to(copy, { yPercent: -18, opacity: 0, ease: "none" }, 0);
+    },
+    { scope: root, dependencies: [reduced], revertOnUpdate: true },
+  );
+
+  return (
+    <section
+      ref={root}
+      className="relative flex min-h-svh items-center overflow-hidden px-gutter pb-section pt-40"
+    >
+      <div data-plate className="absolute inset-0">
+        <CineMedia video={heroVideo} poster="it-helpdesk" tint={0.8} />
+      </div>
 
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/30"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/45"
+      />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/70"
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-frame">
+      <div data-copy className="relative z-10 mx-auto w-full max-w-frame">
         <RevealBlock>
           <p className="mb-10 text-micro font-medium uppercase text-accent">
             Global operations — two continents
