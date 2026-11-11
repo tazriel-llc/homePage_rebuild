@@ -1,21 +1,11 @@
 import Chapter from "@/components/motion/chapter";
-import {
-  stakesMedia,
-  problemMedia,
-  mechanismMedia,
-  answerMedia,
-  chapterVideo,
-} from "@/content/media";
 
 /**
  * The narrative spine. Four chapters, in dependency order — 03 only lands if
  * you have read 02, and 04 is only an answer because 03 named the question.
- * Reordering them breaks the page, which is the point: the old homepage was
- * eight interchangeable sections, and that is why it read as a catalogue.
  *
- * Structural rule learned from otsuka-air.jp: a chapter holds exactly ONE idea
- * in one viewport. Lists, grids, and indexes stay in ordinary flow sections
- * below — they need scroll room a sticky viewport cannot give them.
+ * Upgraded: Replaced short repetitive video loops with architectural,
+ * scroll-driven parallax image portals (inspired by InterGest Canada & Spectup).
  */
 
 export function ChapterStakes() {
@@ -23,8 +13,9 @@ export function ChapterStakes() {
     <Chapter
       index={1}
       label="What this actually runs on"
-      video={chapterVideo[1]}
-      media={stakesMedia}
+      tag="ATTENTION ARCHITECTURE"
+      image="it-helpdesk"
+      coords="39.78° N // 89.65° W"
     >
       <h2 id="chapter-1" data-beat className="max-w-[16ch] text-display-l">
         Every operation you run is somebody&rsquo;s full attention.
@@ -42,8 +33,9 @@ export function ChapterProblem() {
     <Chapter
       index={2}
       label="Why it went wrong last time"
-      video={chapterVideo[2]}
-      media={problemMedia}
+      tag="THE CAPACITY TRAP"
+      image="saas-product-support"
+      coords="DEFLECTION VS RESOLUTION"
     >
       <h2 id="chapter-2" data-beat className="max-w-[18ch] text-display-l">
         Outsourcing sold you capacity. Capacity is not{" "}
@@ -65,8 +57,9 @@ export function ChapterMechanism() {
       index={3}
       label="The variable that actually moves"
       field="paper"
-      video={chapterVideo[3]}
-      media={mechanismMedia}
+      tag="DOMAIN MASTERY"
+      image="meetings-and-events"
+      coords="EXPERIENCE OVER HEADCOUNT"
     >
       <h2 id="chapter-3" data-beat className="max-w-[18ch] text-display-l">
         It was never how many. It was whether they had{" "}
@@ -83,7 +76,13 @@ export function ChapterMechanism() {
 
 export function ChapterAnswer() {
   return (
-    <Chapter index={4} label="What we built instead" video={chapterVideo[4]} media={answerMedia}>
+    <Chapter
+      index={4}
+      label="What we built instead"
+      tag="TWO CONTINENTS · ONE BENCH"
+      image="software-development"
+      coords="SPRINGFIELD · ADDIS · SKOPJE"
+    >
       <h2 id="chapter-4" data-beat className="max-w-[16ch] text-display-l">
         Senior operators, embedded, on two continents.
       </h2>

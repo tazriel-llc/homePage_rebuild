@@ -3,56 +3,43 @@
 import { useRef, type ReactNode } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import ImageField, { type Shard } from "@/components/motion/image-field";
-import CineMedia from "@/components/motion/cine-media";
-import { videoPoster } from "@/content/media";
 
 type Props = {
   index: number;
   label: string;
+  tag?: string;
+  image?: string;
+  coords?: string;
   field?: "ink" | "paper";
   /** Scroll runway in svh. Longer = the beat holds longer before it exits. */
   runway?: number;
-  /**
-   * Basename in /public/media/video. When present it replaces the collage
-   * outright rather than layering over it — the scattered stills were standing
-   * in for footage we did not have, and running both is noise.
-   */
-  video?: string;
-  /** Decorative photographic collage, used when there is no clip. */
-  media?: Shard[];
   children: ReactNode;
 };
 
 /**
- * The storytelling primitive, modelled on otsuka-air.jp's chapter structure:
- * a tall `scroll-area` that budgets scroll distance, and a `content-area` that
- * holds still while that distance passes.
+ * Chapter — Narrative Storytelling Primitive.
  *
- * Two decisions worth keeping:
+ * Upgraded from short looping videos to an architectural, scroll-driven visual portal
+ * (inspired by InterGest Canada & Spectup):
  *
- * 1. **CSS `position: sticky`, not ScrollTrigger `pin`.** Native sticky needs no
- *    pin-spacer, cannot desynchronise from Lenis, and survives resize without a
- *    refresh. ScrollTrigger is only used to read progress.
- *
- * 2. **Beats exit as well as enter.** Everything else on this site reveals with
- *    `once: true` and then sits there forever, which is exactly what made the
- *    page read as a catalogue rather than a narrative. Inside a chapter each
- *    `[data-beat]` runs in → hold → out, scrubbed to scroll position.
- *
- * Under reduced motion the runway collapses, sticky is dropped, and the chapter
- * renders as an ordinary section with every beat at its final state. §4.4
+ * - Left: Editorial narrative typography with enter -> hold -> exit scrub.
+ * - Right: Framed architectural photographic portal with scroll-driven parallax drift (no short video loops!).
+ * - Ambient background: Subtle depth bloom and colossal ghost numeral.
+ * - Native CSS sticky ensures zero desync with Lenis.
  */
 export default function Chapter({
   index,
   label,
+  tag = "OPERATIONAL PRINCIPLE",
+  image = "it-helpdesk",
+  coords = "01 // ATTENTION ARCHITECTURE",
   field = "ink",
-  runway = 165,
-  video,
-  media,
+  runway = 175,
   children,
 }: Props) {
   const root = useRef<HTMLElement>(null);
+  const portalRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const reduced = useReducedMotion();
 
   useGSAP(
@@ -60,9 +47,17 @@ export default function Chapter({
       if (reduced || !root.current) return;
 
       const beats = gsap.utils.selector(root)("[data-beat]");
+      const portal = portalRef.current;
+      const img = imgRef.current;
       if (!beats.length) return;
 
-      gsap.set(beats, { yPercent: 40, opacity: 0 });
+      gsap.set(beats, { yPercent: 35, opacity: 0 });
+      if (portal) {
+        gsap.set(portal, { opacity: 0, scale: 0.94 });
+      }
+      if (img) {
+        gsap.set(img, { scale: 1.15, yPercent: 5 });
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -74,29 +69,74 @@ export default function Chapter({
         },
       });
 
-      /* Ratio matters more than the numbers. Entry and exit are deliberately
-       * short and the hold is long, because this timeline is scrubbed across
-       * the WHOLE section: any scroll spent entering or leaving is scroll spent
-       * looking at a half-empty viewport.
-       *
-       * Previously 1 / 1.8 / 0.9 — the beat was not fully in until 27% of the
-       * section and had left again by 76%, so roughly a third of every chapter
-       * was blank. Now in by 11%, out after 89%. */
-      tl.to(beats, {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.5,
-        stagger: 0.05,
-        ease: "expo.out",
-      })
-        .to({}, { duration: 3.4 }) // the hold — where the beat is actually read
-        .to(beats, {
-          yPercent: -22,
+      // ── Entrance (10% of runway) ───────────────────────────────────
+      tl.to(
+        beats,
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: "expo.out",
+        },
+        0,
+      );
+
+      if (portal) {
+        tl.to(
+          portal,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            ease: "expo.out",
+          },
+          0,
+        );
+      }
+
+      // ── Hold & Parallax (75% of runway) ───────────────────────────
+      tl.to({}, { duration: 3.2 }); // Hold for deep reading
+
+      if (img) {
+        // Scroll-driven parallax drift on the photograph instead of video loop!
+        tl.to(
+          img,
+          {
+            yPercent: -8,
+            scale: 1.04,
+            duration: 4.2,
+            ease: "none",
+          },
+          0,
+        );
+      }
+
+      // ── Exit (15% of runway) ───────────────────────────────────────
+      tl.to(
+        beats,
+        {
+          yPercent: -20,
           opacity: 0,
           duration: 0.5,
           stagger: 0.04,
           ease: "power2.in",
-        });
+        },
+        3.7,
+      );
+
+      if (portal) {
+        tl.to(
+          portal,
+          {
+            opacity: 0,
+            scale: 0.96,
+            duration: 0.5,
+            ease: "power2.in",
+          },
+          3.7,
+        );
+      }
     },
     { scope: root, dependencies: [reduced], revertOnUpdate: true },
   );
@@ -107,11 +147,9 @@ export default function Chapter({
     <section
       ref={root}
       aria-labelledby={`chapter-${index}`}
-      // Watched by the nav, which inverts its own colours over paper. §5.2
       data-field={paper ? "paper" : undefined}
-      // Watched by ChapterRail to show where in the narrative you are.
       data-chapter={index}
-      className={paper ? "bg-paper text-ink" : "bg-ink text-paper"}
+      className={`relative ${paper ? "bg-paper text-ink" : "bg-ink text-paper"}`}
       style={reduced ? undefined : { height: `${runway}svh` }}
     >
       <div
@@ -121,57 +159,115 @@ export default function Chapter({
             : "sticky top-0 flex h-svh items-center px-gutter"
         }`}
       >
-        {(video || media) && (
-          <>
-            {video ? (
-              <CineMedia
-                video={video}
-                poster={videoPoster[video]}
-                tint={paper ? 0.45 : 0.8}
-              />
-            ) : (
-              <ImageField shards={media!} tint={paper ? "ink" : "depth"} />
-            )}
+        {/* Background Ambient Depth Bloom */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-20 top-1/4 size-[45vw] rounded-full opacity-15 blur-[120px]"
+          style={{
+            background: paper
+              ? "radial-gradient(circle, var(--color-depth) 0%, transparent 70%)"
+              : "radial-gradient(circle, var(--color-depth) 0%, transparent 65%)",
+          }}
+        />
 
-            {/* Scrim. Footage never gets to compete with the sentence. Two
-                gradients, not one: the horizontal keeps the type side solid,
-                the vertical stops a bright frame washing out the eyebrow. */}
-            <span
-              aria-hidden
-              className={`pointer-events-none absolute inset-0 bg-gradient-to-r ${
-                paper
-                  ? "from-paper via-paper/80 to-paper/25"
-                  : "from-ink via-ink/85 to-ink/40"
-              }`}
-            />
-            {/* Ink only. On paper the horizontal scrim already carries enough
-                and a second one stacks into near-white, erasing the footage. */}
-            {!paper && (
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 to-ink/20"
-              />
-            )}
-          </>
-        )}
+        {/* Colossal Ghost Numeral */}
+        <span
+          aria-hidden
+          className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 select-none font-display text-[25vw] leading-none ${
+            paper ? "text-ink/[0.04]" : "text-paper/[0.04]"
+          }`}
+        >
+          0{index}
+        </span>
 
+        {/* Main 12-Column Grid */}
         <div className="relative z-10 mx-auto w-full max-w-frame">
-          <p
-            data-beat
-            className="mb-10 flex items-center gap-4 text-micro font-medium uppercase"
-          >
-            <span className="text-accent">
-              {String(index).padStart(2, "0")}
-            </span>
-            <span
-              aria-hidden
-              className={`h-px w-10 ${paper ? "bg-line-paper" : "bg-line"}`}
-            />
-            <span className={paper ? "text-muted-paper" : "text-muted"}>
-              {label}
-            </span>
-          </p>
-          {children}
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+            {/* Left Column: Narrative Headline & Body */}
+            <div className="lg:col-span-7">
+              <div
+                data-beat
+                className="mb-8 flex flex-wrap items-center gap-3 text-micro font-medium uppercase tracking-[0.2em]"
+              >
+                <span className="font-mono text-accent">
+                  0{index} // CHAPTER
+                </span>
+                <span
+                  aria-hidden
+                  className={`h-px w-6 ${paper ? "bg-line-paper" : "bg-line"}`}
+                />
+                <span className={paper ? "text-muted-paper" : "text-muted"}>
+                  {label}
+                </span>
+              </div>
+
+              {children}
+            </div>
+
+            {/* Right Column: Architectural Photographic Portal */}
+            <div className="hidden lg:col-span-5 lg:block">
+              <div
+                ref={portalRef}
+                className={`relative aspect-[4/5] w-full max-w-md overflow-hidden border ${
+                  paper
+                    ? "border-line-paper bg-paper-sunk"
+                    : "border-line bg-ink-raised"
+                } shadow-2xl`}
+              >
+                {/* Top Corner Meta */}
+                <div
+                  className={`flex items-center justify-between border-b px-5 py-3 font-mono text-micro ${
+                    paper
+                      ? "border-line-paper text-muted-paper"
+                      : "border-line/60 text-muted"
+                  }`}
+                >
+                  <span className="text-accent">{coords}</span>
+                  <span>{tag}</span>
+                </div>
+
+                {/* Parallax Image Plate */}
+                <div className="relative size-full overflow-hidden">
+                  <img
+                    ref={imgRef}
+                    src={`/media/${image}-1280.webp`}
+                    srcSet={`/media/${image}-640.webp 640w, /media/${image}-1280.webp 1280w`}
+                    sizes="(max-width: 1024px) 100vw, 420px"
+                    alt=""
+                    className="size-full object-cover grayscale"
+                  />
+                  {/* Duotone tint overlay */}
+                  <span
+                    className={`absolute inset-0 mix-blend-color ${
+                      paper ? "bg-paper/50" : "bg-ink/75"
+                    }`}
+                  />
+                  <span
+                    className={`absolute inset-0 ${
+                      paper
+                        ? "bg-gradient-to-t from-paper/80 via-transparent to-transparent"
+                        : "bg-gradient-to-t from-ink/90 via-ink/20 to-transparent"
+                    }`}
+                  />
+                </div>
+
+                {/* Bottom Status Ribbon */}
+                <div
+                  className={`absolute inset-x-0 bottom-0 flex items-center justify-between border-t px-5 py-3 font-mono text-micro ${
+                    paper
+                      ? "border-line-paper/60 bg-paper/90 text-ink"
+                      : "border-line/60 bg-ink/90 text-paper"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="size-1.5 rounded-full bg-accent" />
+                    <span>VERIFIED OPERATIONAL CASE</span>
+                  </span>
+                  <span className="text-muted">TAZRIEL BENCH</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
