@@ -94,8 +94,9 @@ export default function CineMedia({
       {/* Same navy duotone as every other image on the site, so generated
           footage and existing photography read as one body of work. */}
       <span
-        className="absolute inset-0 mix-blend-color"
-        style={{ backgroundColor: `rgb(2 0 53 / ${tint})` }}
+        suppressHydrationWarning
+        className="absolute inset-0 mix-blend-color pointer-events-none"
+        style={{ backgroundColor: `rgba(2, 0, 53, ${tint})` }}
       />
     </div>
   );

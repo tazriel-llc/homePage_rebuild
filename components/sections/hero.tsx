@@ -101,8 +101,8 @@ export default function Hero() {
         </RevealBlock>
 
         <RevealText as="h1" className="max-w-[14ch] text-display-xl" delay={0.1}>
-          Specialists who work the way you <em className="italic">already</em>{" "}
-          do.
+          A global team that works like <em className="italic">part of</em>{" "}
+          yours. 
         </RevealText>
 
         <RevealBlock delay={0.4}>
