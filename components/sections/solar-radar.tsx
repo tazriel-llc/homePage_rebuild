@@ -1,128 +1,67 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
-type Hub = {
+type DeliveryHub = {
   id: string;
-  city: string;
-  country: string;
+  num: string;
+  name: string;
   region: string;
-  tzLabel: string;
-  timeZoneId: string;
-  offset: string;
-  status: string;
-  disciplines: string[];
   coords: string;
+  role: string;
+  summary: string;
+  capabilities: string[];
+  specs: { label: string; value: string };
 };
 
-const hubs: Hub[] = [
+const hubs: DeliveryHub[] = [
   {
-    id: "us",
-    city: "Springfield",
-    country: "United States",
-    region: "Executive Governance & Strategy",
-    tzLabel: "CT (UTC-6)",
-    timeZoneId: "America/Chicago",
-    offset: "UTC-6",
-    status: "EXECUTIVE STEWARDSHIP",
-    disciplines: ["Client Governance", "Contract SLA Enforcement", "Executive Leadership"],
-    coords: "39.78° N // 89.65° W",
-  },
-  {
-    id: "emea",
-    city: "London / EMEA",
-    country: "United Kingdom",
-    region: "Enterprise Client Overlap",
-    tzLabel: "GMT (UTC+0)",
-    timeZoneId: "Europe/London",
-    offset: "UTC+0",
-    status: "SYNCHRONOUS COVERAGE",
-    disciplines: ["Commercial Operations", "EMEA Stakeholder Sync", "Real-time Escalations"],
-    coords: "51.50° N // 0.12° W",
+    id: "addis",
+    num: "01",
+    name: "Addis Ababa",
+    region: "Primary Engineering Hub // East Africa",
+    coords: "9.03° N // 38.74° E",
+    role: "Core Software Architecture & Machine Learning",
+    summary:
+      "Deep technical bench operating dedicated specialist teams inside client tooling, repositories, and daily agile sprints. High-retention engineering culture.",
+    capabilities: [
+      "Certified Mendix Rapid, Intermediate & Advanced Developers",
+      "Domain-specialist AI & RLHF data annotation pipelines",
+      "Microsoft 365, Azure AD & zero-trust identity posture",
+    ],
+    specs: { label: "CAPACITY STATUS", value: "ACTIVE PRODUCTION BENCH" },
   },
   {
     id: "skopje",
-    city: "Skopje",
-    country: "North Macedonia",
-    region: "European Delivery Hub",
-    tzLabel: "CET (UTC+1)",
-    timeZoneId: "Europe/Skopje",
-    offset: "UTC+1",
-    status: "EMEA BENCH ACTIVE",
-    disciplines: ["Tier-3 SaaS Support", "Cvent Event Infrastructure", "EMEA Agile Sprints"],
+    num: "02",
+    name: "Skopje",
+    region: "European Delivery Hub // EMEA",
     coords: "41.99° N // 21.42° E",
-  },
-  {
-    id: "addis",
-    city: "Addis Ababa",
-    country: "Ethiopia",
-    region: "Primary Engineering Hub",
-    tzLabel: "EAT (UTC+3)",
-    timeZoneId: "Africa/Addis_Ababa",
-    offset: "UTC+3",
-    status: "PRODUCTION HUB ACTIVE",
-    disciplines: ["Mendix Architecture", "AI/ML Data Annotation", "Cloud Infrastructure"],
-    coords: "9.03° N // 38.74° E",
-  },
-];
-
-const timelinePhases = [
-  {
-    time: "08:00 – 16:00 EAT",
-    hub: "Addis Ababa Hub",
-    action: "Core Mendix feature engineering, dataset annotation runs, and tenant security posture audits.",
-  },
-  {
-    time: "10:00 – 18:00 CET",
-    hub: "Skopje Hub",
-    action: "Live Tier-3 resolution queues, enterprise Cvent logic build-outs, and London business hour overlap.",
-  },
-  {
-    time: "14:00 – 22:00 EAT",
-    hub: "Bilateral Handoff",
-    action: "Direct daily sprint syncs with US East Coast engineering leadership. Bidirectional PR reviews.",
-  },
-  {
-    time: "Overnight US",
-    hub: "Autonomous Velocity",
-    action: "Automated regression tests run, ticket backlog triaged, morning status reports compiled.",
+    role: "Tier-3 Product Support & Enterprise Event Infrastructure",
+    summary:
+      "Nearshore European operations providing direct business hours overlap with London, Zurich, and New York. Real engineers staffing live resolution queues.",
+    capabilities: [
+      "Tier-3 SaaS incident triage & code-level reproductions",
+      "Cvent-certified enterprise event operations & attendee support",
+      "Continuous US and European working hours alignment",
+    ],
+    specs: { label: "TIMELINE OVERLAP", value: "DIRECT EMEA & US ALIGNMENT" },
   },
 ];
 
 /**
- * SolarRadar — The Solar Handoff Horizon.
+ * SolarRadar — The Sovereign Global Infrastructure.
  *
- * Demonstrates Tazriel's true operational superpower:
- * Real-time synchronous coverage across four time zones with continuous
- * operational momentum and zero overnight deflection delays.
+ * Completely redesigned for calm, sovereign luxury (InterGest Canada aesthetic):
+ * - ZERO tacky airport clocks or ticking seconds.
+ * - Expansive architectural whitespace and commanding display typography.
+ * - Deep, authentic presentation of the two sovereign delivery hubs.
  */
 export default function SolarRadar() {
   const root = useRef<HTMLElement>(null);
-  const [times, setTimes] = useState<Record<string, string>>({});
   const reduced = useReducedMotion();
-
-  useEffect(() => {
-    const update = () => {
-      const now = new Date();
-      const newTimes: Record<string, string> = {};
-      hubs.forEach((h) => {
-        newTimes[h.id] = now.toLocaleTimeString("en-US", {
-          timeZone: h.timeZoneId,
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        });
-      });
-      setTimes(newTimes);
-    };
-
-    update();
-    const interval = setInterval(update, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   useGSAP(
     () => {
@@ -154,12 +93,12 @@ export default function SolarRadar() {
     <section
       ref={root}
       data-theme="dark"
-      className="relative w-full bg-ink text-paper py-24 sm:py-32 px-gutter overflow-hidden border-t border-line/60"
+      className="relative w-full bg-ink text-paper py-28 sm:py-36 px-gutter overflow-hidden border-t border-line/40"
     >
-      {/* Subtle ambient lighting */}
+      {/* Background ambient luxury depth bloom */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[60vw] rounded-full opacity-10 blur-[160px]"
+        className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 size-[50vw] rounded-full opacity-10 blur-[160px]"
         style={{
           background: "radial-gradient(circle, var(--color-depth) 0%, transparent 70%)",
         }}
@@ -167,111 +106,99 @@ export default function SolarRadar() {
 
       <div className="mx-auto w-full max-w-frame relative z-10">
         {/* Section Header */}
-        <div data-radar-beat className="max-w-3xl mb-12 sm:mb-16">
-          <div className="flex items-center gap-2 font-mono text-micro uppercase tracking-[0.25em] text-accent">
-            <span className="size-1.5 rounded-full bg-accent animate-ping" />
-            <span>04 // SYNCHRONOUS OPERATIONAL TOPOLOGY</span>
+        <div data-radar-beat className="max-w-3xl mb-16 sm:mb-20">
+          <div className="flex items-center gap-3 font-mono text-micro uppercase tracking-[0.25em] text-accent mb-4">
+            <span className="size-1.5 rounded-full bg-accent animate-pulse" />
+            <span>04 // GLOBAL INFRASTRUCTURE</span>
           </div>
-          <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl font-normal leading-[1.04] tracking-tight text-paper">
-            Two continents. Four time zones.{" "}
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal leading-[1.05] tracking-tight text-paper">
+            Two continents. One bench.{" "}
             <span className="font-serif italic text-accent">Unbroken velocity.</span>
           </h2>
           <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted max-w-2xl">
-            Your domestic engineering teams shouldn&rsquo;t wake up to overnight fires.
-            Our dual-continent delivery architecture ensures structured coverage from
-            dawn in London through dusk in Silicon Valley.
+            Tazriel delivery operates from Addis Ababa and is expanding into North Macedonia,
+            giving structured coverage across US and European operating hours with zero dropped threads.
           </p>
         </div>
 
-        {/* Live Synchronous Clocks Grid */}
+        {/* Dual Sovereign Hubs Grid (SPACIOUS, NO CLOCK TICKERS, NO AMATEUR BOXES) */}
         <div
           data-radar-beat
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch"
         >
           {hubs.map((hub) => (
             <div
               key={hub.id}
-              className="border border-line/80 bg-ink-raised/80 p-6 backdrop-blur-md transition-all duration-300 hover:border-accent/60"
+              className="border-t border-line/50 pt-8 sm:pt-10 flex flex-col justify-between"
             >
-              {/* Top Meta */}
-              <div className="flex items-center justify-between border-b border-line/50 pb-3 font-mono text-micro text-muted">
-                <span className="text-accent font-semibold">{hub.offset}</span>
-                <span>{hub.coords}</span>
-              </div>
-
-              {/* City & Live Clock */}
-              <div className="mt-5 flex items-baseline justify-between">
-                <div>
-                  <h3 className="font-serif text-2xl font-normal text-paper">
-                    {hub.city}
-                  </h3>
-                  <span className="block text-xs text-muted mt-0.5">
-                    {hub.country}
+              <div>
+                {/* Meta Header */}
+                <div className="flex items-center justify-between font-mono text-micro mb-4">
+                  <span className="text-accent font-semibold flex items-center gap-2">
+                    <span>{hub.num} //</span>
+                    <span>{hub.region}</span>
                   </span>
+                  <span className="text-muted/60">{hub.coords}</span>
                 </div>
 
-                <div className="text-right">
-                  <span className="font-mono text-2xl sm:text-3xl font-bold text-accent tracking-wider">
-                    {times[hub.id] || "00:00:00"}
-                  </span>
-                  <span className="block font-mono text-[10px] text-muted">
-                    {hub.tzLabel}
-                  </span>
-                </div>
-              </div>
+                {/* City Name */}
+                <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-paper leading-tight">
+                  {hub.name}
+                </h3>
 
-              {/* Core Role */}
-              <p className="mt-4 text-xs leading-relaxed text-paper/80 border-t border-line/40 pt-3">
-                {hub.region}
-              </p>
+                <p className="mt-2 font-mono text-xs uppercase tracking-wider text-muted">
+                  {hub.role}
+                </p>
+
+                <p className="mt-6 text-sm sm:text-base leading-relaxed text-muted max-w-xl">
+                  {hub.summary}
+                </p>
+
+                {/* Capabilities List */}
+                <ul className="mt-8 space-y-3.5 border-t border-line/30 pt-6">
+                  {hub.capabilities.map((cap, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 text-xs sm:text-sm text-paper/85 leading-relaxed"
+                    >
+                      <span className="size-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
+                      <span>{cap}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
               {/* Status Ribbon */}
-              <div className="mt-4 flex items-center justify-between font-mono text-[10px] text-muted pt-2 border-t border-line/30">
-                <span>STATUS:</span>
-                <span className="text-paper font-semibold flex items-center gap-1.5">
-                  <span className="size-1 rounded-full bg-accent animate-pulse" />
-                  <span>{hub.status}</span>
+              <div className="mt-10 border-t border-line/40 pt-4 flex items-center justify-between font-mono text-xs text-muted">
+                <span>{hub.specs.label}</span>
+                <span className="text-paper font-semibold flex items-center gap-2">
+                  <span className="size-1.5 rounded-full bg-accent animate-pulse" />
+                  <span>{hub.specs.value}</span>
                 </span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* The 24-Hour Handoff Architecture Ledger */}
+        {/* Operational Horizon Statement */}
         <div
           data-radar-beat
-          className="mt-12 sm:mt-16 border border-line/80 bg-ink-raised/60 p-6 sm:p-8 backdrop-blur-md"
+          className="mt-16 sm:mt-24 border-t border-line/40 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-6"
         >
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line/50 pb-4 mb-6">
-            <div>
-              <span className="font-mono text-micro uppercase tracking-wider text-accent font-semibold">
-                Continuous Operational Momentum
-              </span>
-              <h3 className="font-serif text-xl sm:text-2xl text-paper mt-1">
-                How tasks and incident queues hand off without delay
-              </h3>
-            </div>
-
-            <div className="flex items-center gap-2 font-mono text-xs text-muted">
-              <span className="size-2 rounded-full bg-accent" />
-              <span>OVERNIGHT DEFLECTION: ZERO</span>
-            </div>
+          <div className="max-w-2xl">
+            <span className="font-mono text-micro uppercase tracking-wider text-accent font-semibold block mb-1">
+              The Sovereign Handoff Covenant
+            </span>
+            <p className="text-sm sm:text-base text-muted leading-relaxed">
+              When domestic teams close their day in New York, our East African and European
+              specialists continue the sprint without interruption. Your engineers wake up to resolved PRs,
+              not unattended escalations.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {timelinePhases.map((phase, i) => (
-              <div key={i} className="border-l-2 border-accent/70 pl-4 space-y-2">
-                <span className="font-mono text-xs font-semibold text-accent block">
-                  {phase.time}
-                </span>
-                <h4 className="font-serif text-lg text-paper font-normal">
-                  {phase.hub}
-                </h4>
-                <p className="text-xs text-muted leading-relaxed">
-                  {phase.action}
-                </p>
-              </div>
-            ))}
+          <div className="font-mono text-xs text-muted flex items-center gap-3 shrink-0">
+            <span className="size-2 rounded-full bg-accent" />
+            <span>CONTRACTUAL TIMEZONE ALIGNMENT: 100%</span>
           </div>
         </div>
       </div>
