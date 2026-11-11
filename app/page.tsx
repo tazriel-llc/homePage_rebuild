@@ -9,6 +9,7 @@ import {
 import GlobalFootprint from "@/components/sections/global-footprint";
 import ServiceIndex from "@/components/sections/service-index";
 import SolutionsHolder from "@/components/sections/solutions-holder";
+import BuildFutureCta from "@/components/sections/build-future-cta";
 import Process from "@/components/sections/process";
 import Recognition from "@/components/sections/recognition";
 import ContactCta from "@/components/sections/contact-cta";
@@ -38,6 +39,7 @@ export default function Home() {
 
         <ServiceIndex />
         <SolutionsHolder />
+        <BuildFutureCta />
         <Process />
         <Recognition />
         <ContactCta />

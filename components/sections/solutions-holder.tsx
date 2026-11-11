@@ -120,9 +120,7 @@ export default function SolutionsHolder() {
   const root = useRef<HTMLElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
   const bgTextRef = useRef<HTMLDivElement>(null);
-  const exitTextRef = useRef<HTMLDivElement>(null);
   const coverCardRef = useRef<HTMLDivElement>(null);
-  const outroCardRef = useRef<HTMLDivElement>(null);
   const slidesContainerRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -138,9 +136,7 @@ export default function SolutionsHolder() {
 
       const portal = portalRef.current;
       const bgText = bgTextRef.current;
-      const exitText = exitTextRef.current;
       const coverCard = coverCardRef.current;
-      const outroCard = outroCardRef.current;
       const slidesContainer = slidesContainerRef.current;
 
       const slideEls = slideRefs.current.filter(Boolean) as HTMLDivElement[];
@@ -155,9 +151,7 @@ export default function SolutionsHolder() {
       });
 
       if (coverCard) gsap.set(coverCard, { opacity: 1 });
-      if (outroCard) gsap.set(outroCard, { opacity: 0, pointerEvents: "none" });
       if (slidesContainer) gsap.set(slidesContainer, { opacity: 0 });
-      if (exitText) gsap.set(exitText, { opacity: 0, scale: 0.95 });
 
       // Position all incoming slides (slides 1 to 4) off-screen to the right
       slideEls.slice(1).forEach((el) => {
@@ -165,7 +159,7 @@ export default function SolutionsHolder() {
       });
       if (slideEls[0]) gsap.set(slideEls[0], { xPercent: 0 });
 
-      // Master Timeline across 650vh runway
+      // Master Timeline across runway
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
@@ -175,15 +169,13 @@ export default function SolutionsHolder() {
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const p = self.progress;
-            if (p < 0.22) {
+            if (p < 0.25) {
               setActiveSlide(0);
-            } else if (p < 0.36) {
-              setActiveSlide(0);
-            } else if (p < 0.5) {
+            } else if (p < 0.44) {
               setActiveSlide(1);
-            } else if (p < 0.64) {
+            } else if (p < 0.63) {
               setActiveSlide(2);
-            } else if (p < 0.78) {
+            } else if (p < 0.82) {
               setActiveSlide(3);
             } else {
               setActiveSlide(4);
@@ -233,7 +225,7 @@ export default function SolutionsHolder() {
         );
       }
 
-      // ── PHASE 2: Slides with dedicated reading holds (1.5 -> 7.9) ───────────
+      // ── PHASE 2: Slides with dedicated reading holds ────────────────────────
       // Slide 1 Holds (1.5 -> 2.3)
       tl.to({}, { duration: 0.8 }, 1.5);
 
@@ -278,56 +270,8 @@ export default function SolutionsHolder() {
           7.1,
         );
       }
-      // Slide 5 Holds (7.9 -> 8.7)
-      tl.to({}, { duration: 0.8 }, 7.9);
-
-      // ── PHASE 3: The Creative Zoom-Out Exit (8.7 -> 10.0) ──────────────────
-      // 1. Crossfade wide slides container into the tailored outro card so nothing overflows!
-      if (slidesContainer && outroCard) {
-        tl.to(
-          slidesContainer,
-          { opacity: 0, duration: 0.35, ease: "power2.in" },
-          8.7,
-        );
-        tl.to(
-          outroCard,
-          {
-            opacity: 1,
-            pointerEvents: "auto",
-            duration: 0.45,
-            ease: "power2.out",
-          },
-          8.85,
-        );
-      }
-
-      // 2. Portal scales down into a perfectly sized luxury card (fits 100% cleanly!)
-      tl.to(
-        portal,
-        {
-          width: "430px",
-          height: "590px",
-          borderRadius: "8px",
-          borderColor: "var(--color-accent)",
-          duration: 1.3,
-          ease: "power2.inOut",
-        },
-        8.7,
-      );
-
-      // 3. As portal shrinks, reveal the exit title in background
-      if (exitText) {
-        tl.to(
-          exitText,
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 1.1,
-            ease: "power2.out",
-          },
-          8.9,
-        );
-      }
+      // Slide 5 Holds in Full Screen (7.9 -> 9.0)
+      tl.to({}, { duration: 1.1 }, 7.9);
     },
     { scope: root, dependencies: [cinematic] },
   );
@@ -399,13 +343,13 @@ export default function SolutionsHolder() {
     );
   }
 
-  // ── Cinematic: InterGest Canada Zoom-in, Paced Slides, & Zoom-Out Exit ──
+  // ── Cinematic: InterGest Canada Zoom-in & Paced Slides ────────────────
   return (
     <section
       ref={root}
       id="solutions"
       className="solutions_group relative w-full bg-ink text-paper"
-      style={{ height: "650vh" }}
+      style={{ height: "550vh" }}
     >
       <div className="solutions_holder sticky top-0 flex h-svh w-full items-center justify-center overflow-hidden">
         {/* Entrance Background Typography (InterGest Image 4) */}
@@ -428,27 +372,7 @@ export default function SolutionsHolder() {
           </p>
         </div>
 
-        {/* Exit Background Typography (Zoom-Out Reveal - ZERO BLANK SCREEN!) */}
-        <div
-          ref={exitTextRef}
-          aria-hidden
-          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center select-none text-center px-4 z-10"
-        >
-          <span className="font-mono text-micro uppercase tracking-[0.3em] text-accent">
-            Two Continents · One Bench
-          </span>
-          <h2 className="mt-4 font-display text-[7.5vw] leading-[0.92] tracking-tight text-paper/[0.12]">
-            UNBROKEN OPERATIONAL
-          </h2>
-          <h2 className="font-display text-[7.5vw] leading-[0.92] tracking-tight text-paper/[0.12]">
-            MOMENTUM
-          </h2>
-          <p className="mt-6 max-w-lg font-mono text-xs uppercase tracking-widest text-muted/60">
-            Continuous handoffs across US and EMEA time zones ↓
-          </p>
-        </div>
-
-        {/* Center Portal Window (Scales to 100vw x 100vh, then Zooms Out at end) */}
+        {/* Center Portal Window (Scales to 100vw x 100vh) */}
         <div
           ref={portalRef}
           data-portal
@@ -627,84 +551,6 @@ export default function SolutionsHolder() {
                   />
                 ))}
               </div>
-            </div>
-          </div>
-
-          {/* ── 3. Tailored Outro Card (Pristine Zoom-Out of Slide 05 — FITS 100% CLEANLY!) ── */}
-          <div
-            ref={outroCardRef}
-            className="absolute inset-0 z-40 flex flex-col justify-between p-6 sm:p-7"
-          >
-            <div className="absolute inset-0 -z-10">
-              <img
-                src="/media/saas-product-support-1280.webp"
-                alt="SaaS Product Support & IT Helpdesk"
-                className="size-full object-cover grayscale contrast-115"
-              />
-              <span className="absolute inset-0 bg-ink/75 mix-blend-color" />
-              <span className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/50" />
-            </div>
-
-            {/* Top Meta */}
-            <div className="flex items-center justify-between border-b border-line/60 pb-3 font-mono text-micro text-paper">
-              <span className="text-accent font-semibold">05 // RESOLUTION OPERATIONS</span>
-              <span className="flex items-center gap-1.5 text-muted">
-                <span className="size-1.5 rounded-full bg-accent animate-pulse" />
-                <span className="text-paper">BENCH ONLINE</span>
-              </span>
-            </div>
-
-            {/* Middle Content */}
-            <div className="py-2">
-              <span className="font-mono text-micro uppercase tracking-wider text-accent">
-                Tier-3 Platform Engineering
-              </span>
-              <h3 className="mt-2 font-serif text-2xl font-normal leading-snug text-paper">
-                SaaS Product Support &amp; IT Helpdesk
-              </h3>
-              <p className="mt-2.5 text-xs leading-relaxed text-muted">
-                Tier-3 technical support teams that master your platform deeply enough
-                to resolve rather than deflect. Real engineers staffing queues.
-              </p>
-
-              {/* Specialist Specs */}
-              <ul className="mt-4 space-y-2 border-t border-line/50 pt-3 text-[11px] text-paper/85">
-                <li className="flex items-center gap-2">
-                  <span className="size-1 rounded-full bg-accent" />
-                  <span>Real engineers in queues, not scripted deflectors</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="size-1 rounded-full bg-accent" />
-                  <span>HubSpot Service Hub &amp; Jira Service Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="size-1 rounded-full bg-accent" />
-                  <span>Direct escalations with reproducible code logs</span>
-                </li>
-              </ul>
-
-              {/* Action Buttons — Generous clearance from bottom */}
-              <div className="mt-5 flex items-center gap-3">
-                <Link
-                  href="/saas-product-support"
-                  className="inline-flex items-center gap-2 bg-paper px-4 py-2.5 text-xs font-semibold text-ink transition-all duration-300 hover:bg-white"
-                >
-                  <span>Explore Product</span>
-                  <span>→</span>
-                </Link>
-                <Link
-                  href="/contact"
-                  className="text-xs font-medium text-muted hover:text-paper"
-                >
-                  Start a conversation
-                </Link>
-              </div>
-            </div>
-
-            {/* Bottom Status Ribbon */}
-            <div className="flex items-center justify-between border-t border-line/60 pt-2.5 font-mono text-[10px] text-muted">
-              <span>RESOLUTION MODEL</span>
-              <span className="font-semibold text-accent">ZERO DEFLECTION QUEUES</span>
             </div>
           </div>
         </div>

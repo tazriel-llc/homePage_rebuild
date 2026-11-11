@@ -62,12 +62,12 @@ export const answerMedia: Shard[] = [
  */
 export const heroVideo: string | undefined = "hero-entrance";
 export const chapterVideo: Record<number, string | undefined> = {
-  1: "ch01-stakes",
-  2: "ch02-problem",
-  3: "ch03-mechanism",
-  4: "ch04-answer",
+  1: undefined,
+  2: undefined,
+  3: undefined,
+  4: undefined,
 };
-export const closingVideo: string | undefined = "closing";
+export const closingVideo: string | undefined = undefined;
 
 /** Poster still per slot — the first painted frame, chosen to match the clip. */
 export const videoPoster: Record<string, string> = {
