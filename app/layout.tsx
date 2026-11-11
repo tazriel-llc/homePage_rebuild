@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
 import SmoothScroll from "@/components/motion/smooth-scroll";
+import Cursor from "@/components/motion/cursor";
 import Nav from "@/components/layout/nav";
 import Footer from "@/components/layout/footer";
 import "./globals.css";
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body>
         <div className="curtain" aria-hidden />
         <SmoothScroll />
+        <Cursor />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-60 focus:bg-paper focus:px-4 focus:py-2 focus:text-ink"

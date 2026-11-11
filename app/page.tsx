@@ -6,6 +6,7 @@ import {
   ChapterMechanism,
   ChapterAnswer,
 } from "@/components/sections/chapters";
+import GlobalFootprint from "@/components/sections/global-footprint";
 import ServiceIndex from "@/components/sections/service-index";
 import PlatformStack from "@/components/sections/platform-stack";
 import Process from "@/components/sections/process";
@@ -32,6 +33,8 @@ export default function Home() {
         <ChapterProblem />
         <ChapterMechanism />
         <ChapterAnswer />
+
+        <GlobalFootprint />
 
         <ServiceIndex />
         <PlatformStack />

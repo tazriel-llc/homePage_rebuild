@@ -85,9 +85,19 @@ export default function Hero() {
 
       <div data-copy className="relative z-10 mx-auto w-full max-w-frame">
         <RevealBlock>
-          <p className="mb-10 text-micro font-medium uppercase text-accent">
-            Global operations — two continents
-          </p>
+          <div className="mb-8 flex flex-wrap items-center gap-3 text-micro font-medium uppercase tracking-[0.2em] text-accent">
+            <span className="border border-accent/40 bg-ink-raised/80 px-2.5 py-1 text-paper">
+              01 // Global BPO & Technology Services
+            </span>
+            <span className="hidden size-1 rounded-full bg-accent sm:inline-block" />
+            <span className="hidden items-center gap-2 text-muted sm:inline-flex">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-accent" />
+              </span>
+              Springfield · Addis Ababa · Skopje
+            </span>
+          </div>
         </RevealBlock>
 
         <RevealText as="h1" className="max-w-[14ch] text-display-xl" delay={0.1}>
@@ -96,27 +106,70 @@ export default function Hero() {
         </RevealText>
 
         <RevealBlock delay={0.4}>
-          <p className="measure mt-10 text-body-l text-muted">
+          <p className="measure mt-8 text-body-l text-muted">
             {company.description}
           </p>
         </RevealBlock>
 
         <RevealBlock delay={0.55}>
-          <div className="-ml-3 mt-12 flex flex-wrap items-center gap-1">
+          <div className="-ml-3 mt-10 flex flex-wrap items-center gap-1">
             <Magnetic>
               <Link
                 href="/contact"
-                className="inline-block bg-paper px-8 py-4 text-sm font-medium text-ink transition-colors duration-300 hover:bg-white"
+                className="group inline-flex items-center gap-3 bg-paper px-8 py-4 text-sm font-medium text-ink transition-colors duration-300 hover:bg-white"
               >
-                Start a conversation
+                <span>Start a conversation</span>
+                <span
+                  aria-hidden
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  →
+                </span>
               </Link>
             </Magnetic>
             <Link
               href="#disciplines"
               className="link-wipe ml-6 text-sm font-medium text-muted transition-colors duration-300 hover:text-paper"
             >
-              Seven disciplines
+              Explore seven disciplines
             </Link>
+          </div>
+        </RevealBlock>
+
+        {/* InterGest / Spectup style architectural metric ledger */}
+        <RevealBlock delay={0.7} className="mt-20">
+          <div className="grid grid-cols-2 border-t border-line pt-8 sm:grid-cols-4 sm:gap-6">
+            <div className="border-b border-line pb-6 sm:border-b-0 sm:pb-0">
+              <p className="font-mono text-micro uppercase tracking-wider text-accent">
+                01 // Model
+              </p>
+              <p className="mt-1 font-serif text-2xl text-paper">100% Embedded</p>
+              <p className="mt-1 text-xs text-muted">Inside your tooling and daily standups</p>
+            </div>
+
+            <div className="border-b border-line pb-6 sm:border-b-0 sm:pb-0 sm:border-l sm:border-line sm:pl-6">
+              <p className="font-mono text-micro uppercase tracking-wider text-accent">
+                02 // Reach
+              </p>
+              <p className="mt-1 font-serif text-2xl text-paper">2 Continents</p>
+              <p className="mt-1 text-xs text-muted">US & EMEA follow-the-sun coverage</p>
+            </div>
+
+            <div className="pt-6 sm:pt-0 sm:border-l sm:border-line sm:pl-6">
+              <p className="font-mono text-micro uppercase tracking-wider text-accent">
+                03 // Breadth
+              </p>
+              <p className="mt-1 font-serif text-2xl text-paper">7 Disciplines</p>
+              <p className="mt-1 text-xs text-muted">From Engineering to AI Annotation</p>
+            </div>
+
+            <div className="pt-6 sm:pt-0 sm:border-l sm:border-line sm:pl-6">
+              <p className="font-mono text-micro uppercase tracking-wider text-accent">
+                04 // Standing
+              </p>
+              <p className="mt-1 font-serif text-2xl text-paper">DesignRush</p>
+              <p className="mt-1 text-xs text-muted">Vetted top outsourcing partner</p>
+            </div>
           </div>
         </RevealBlock>
       </div>

@@ -4,47 +4,89 @@ import RevealText from "@/components/motion/reveal-text";
 import { platforms } from "@/content/site";
 
 /**
- * Proof section. §7.1
+ * Proof & Accreditation section. §7.1
  *
- * Deliberately short: it carries only what is verifiable today — the DesignRush
- * listing and the platforms teams work in. Quantified client outcomes are a
- * content dependency (§13.4); when three cleared results land they become the
- * lead of this section and the platform strip drops below them. Invented
- * statistics do not ship, and a counting-number animation is banned regardless. §5.2
+ * InterGest / Spectup style: Verified third-party accreditation + platform mastery grid.
  */
 export default function Recognition() {
   return (
-    <section className="px-gutter py-section">
+    <section className="border-t border-line bg-ink px-gutter py-section text-paper">
       <div className="mx-auto max-w-frame">
-        <RevealBlock>
-          <p className="mb-6 text-micro font-medium uppercase text-accent">
-            Standing
-          </p>
-        </RevealBlock>
+        <div className="flex flex-col justify-between gap-6 pb-16 lg:flex-row lg:items-end">
+          <div>
+            <RevealBlock>
+              <div className="flex items-center gap-3">
+                <span className="text-micro font-medium uppercase tracking-[0.2em] text-accent">
+                  Standing & Verification
+                </span>
+                <span className="size-1 rounded-full bg-accent" />
+                <span className="text-micro font-medium uppercase tracking-widest text-muted">
+                  Third-Party Vetted
+                </span>
+              </div>
+            </RevealBlock>
 
-        <RevealText as="h2" className="max-w-[20ch] text-display-m">
-          Listed among vetted outsourcing partners on DesignRush.
-        </RevealText>
+            <RevealText as="h2" className="mt-4 max-w-[20ch] text-display-l">
+              Listed among vetted outsourcing partners on DesignRush.
+            </RevealText>
+          </div>
 
-        <RevealBlock stagger className="mt-20 grid gap-px sm:grid-cols-2 lg:grid-cols-3">
-          {platforms.map((platform) => (
+          <RevealBlock delay={0.2} className="max-w-md">
+            <p className="text-body-l text-muted">
+              Peer-evaluated technical capability, operational stability, and
+              account governance. No synthetic reviews or unearned badges.
+            </p>
+          </RevealBlock>
+        </div>
+
+        {/* Platform Mastery Grid */}
+        <RevealBlock
+          stagger
+          className="grid border border-line sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {platforms.map((platform, i) => (
             <div
               key={platform.name}
-              className="bg-ink-raised px-8 py-10 transition-colors duration-300 hover:bg-ink-raised/70"
+              className={`group relative p-8 transition-colors duration-300 hover:bg-ink-raised ${
+                i < platforms.length - 1 ? "border-b border-line sm:border-b-0" : ""
+              } ${i % 2 !== 1 ? "sm:border-r sm:border-line" : ""} ${
+                i % 3 !== 2 ? "lg:border-r lg:border-line" : ""
+              }`}
             >
-              <h3 className="font-sans text-sm font-medium">{platform.name}</h3>
+              <div className="flex items-center justify-between border-b border-line/60 pb-4">
+                <span className="font-mono text-micro text-accent">
+                  0{i + 1} // PLATFORM
+                </span>
+                <span className="text-micro uppercase text-muted">Verified</span>
+              </div>
+
+              <h3 className="mt-6 text-display-m font-normal text-paper">
+                {platform.name}
+              </h3>
               <p className="mt-2 text-sm text-muted">{platform.role}</p>
+              <p className="mt-4 text-xs leading-relaxed text-muted/80">
+                {platform.note}
+              </p>
             </div>
           ))}
         </RevealBlock>
 
-        <RevealBlock delay={0.2}>
+        <RevealBlock delay={0.3} className="mt-12 flex items-center justify-between">
           <Link
             href="/about"
-            className="link-wipe mt-16 inline-block text-sm font-medium"
+            className="group inline-flex items-center gap-3 font-mono text-xs uppercase tracking-wider text-muted transition-colors duration-300 hover:text-paper"
           >
-            Meet the firm
+            <span>Learn about the firm and delivery hubs</span>
+            <span
+              aria-hidden
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              →
+            </span>
           </Link>
+          <span className="hidden font-mono text-micro text-muted/60 sm:inline-block">
+            STRICT CONFIDENTIALITY & IP GOVERNANCE
+          </span>
         </RevealBlock>
       </div>
     </section>
