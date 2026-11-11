@@ -44,21 +44,67 @@ export default function Chapter({
       if (reduced || !root.current) return;
 
       const beats = gsap.utils.selector(root)("[data-beat]");
-      if (!beats.length) return;
+      const canvas = canvasRef.current;
+      const media = root.current.querySelector("[data-parallax-img]");
 
-      // Elegant entrance reveal on approach
-      gsap.from(beats, {
-        y: 28,
-        opacity: 0.35,
-        duration: 0.8,
-        stagger: 0.08,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top 75%",
-          once: true,
-        },
-      });
+      // 1. Kinetic staggered entrance reveal on approach (from cinematic-scroll-storytelling skill)
+      if (beats.length) {
+        gsap.fromTo(
+          beats,
+          { y: 32, opacity: 0, filter: "blur(6px)" },
+          {
+            y: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.9,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top 75%",
+              once: true,
+            },
+          },
+        );
+      }
+
+      // 2. Parallax drift on the photography plate
+      if (media) {
+        gsap.fromTo(
+          media,
+          { yPercent: -8, scale: 1.08 },
+          {
+            yPercent: 8,
+            scale: 1.0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.8,
+            },
+          },
+        );
+      }
+
+      // 3. Receding Card Stack Depth (from cinematic-scroll-storytelling skill)
+      // As the user scrolls past this card towards the next, this card subtly
+      // scales down, dims, and recedes to give luxurious physical sheet depth.
+      if (canvas && index < 4) {
+        gsap.to(canvas, {
+          scale: 0.94,
+          opacity: 0.65,
+          y: -24,
+          filter: "blur(3px)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "bottom 100%",
+            end: "bottom 0%",
+            scrub: true,
+          },
+        });
+      }
     },
     { scope: root, dependencies: [reduced] },
   );
@@ -82,12 +128,12 @@ export default function Chapter({
       {/* Pinned Viewport Container — Sticks at top: 0 with seamless layer stacking */}
       <div
         ref={canvasRef}
-        className={`w-full overflow-hidden ${
+        className={`w-full overflow-hidden will-change-transform ${
           reduced
             ? "px-gutter py-section"
             : `sticky top-0 flex h-screen items-center justify-center px-gutter py-12 sm:py-16 ${
                 paper ? "bg-paper text-ink" : "bg-ink text-paper"
-              } shadow-[0_-20px_50px_rgba(0,0,0,0.35)]`
+              } shadow-[0_-25px_60px_rgba(0,0,0,0.45)]`
         }`}
       >
         {/* Background Ambient Depth Bloom */}
@@ -105,7 +151,7 @@ export default function Chapter({
         <span
           aria-hidden
           className={`pointer-events-none absolute right-6 top-1/2 -translate-y-1/2 select-none font-display text-[28vw] leading-none ${
-            paper ? "text-ink/[0.035]" : "text-paper/[0.035]"
+            paper ? "text-ink/[0.04]" : "text-paper/[0.04]"
           }`}
         >
           0{index}
@@ -130,6 +176,32 @@ export default function Chapter({
               {tag}
             </span>
           </div>
+        </div>
+
+        {/* Left Vertical Chapter Indicator */}
+        <div className="pointer-events-none absolute left-6 sm:left-8 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-4 font-mono text-[11px] z-20 select-none">
+          {[1, 2, 3, 4].map((n) => (
+            <div key={n} className="flex items-center gap-2">
+              <span
+                className={`h-px transition-all duration-300 ${
+                  n === index
+                    ? `w-5 bg-accent`
+                    : `w-2 ${paper ? "bg-ink/20" : "bg-paper/20"}`
+                }`}
+              />
+              <span
+                className={
+                  n === index
+                    ? "text-accent font-semibold"
+                    : paper
+                    ? "text-muted-paper/50"
+                    : "text-muted/40"
+                }
+              >
+                0{n}
+              </span>
+            </div>
+          ))}
         </div>
 
         {/* Dynamic Architectural Canvas — Full Creative Space */}

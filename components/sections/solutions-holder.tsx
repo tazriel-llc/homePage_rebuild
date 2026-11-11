@@ -324,17 +324,18 @@ export default function SolutionsHolder() {
         8.7,
       );
 
-      // 3. As portal shrinks, reveal the exit title in background
+      // 3. As portal shrinks, reveal the "WE SOLVE WHAT STANDS IN YOUR WAY" background
       if (exitText) {
-        tl.to(
+        tl.fromTo(
           exitText,
+          { opacity: 0, scale: 0.92 },
           {
             opacity: 1,
             scale: 1,
             duration: 1.1,
             ease: "power2.out",
           },
-          8.9,
+          8.75,
         );
       }
 
@@ -435,34 +436,34 @@ export default function SolutionsHolder() {
           <span className="font-mono text-micro uppercase tracking-[0.3em] text-accent">
             Operational Architecture
           </span>
-          <h2 className="mt-4 font-display text-[9vw] leading-[0.88] tracking-tight text-paper/[0.08]">
+          <h2 className="mt-4 font-display text-[9vw] leading-[0.88] tracking-tight text-paper/[0.22]">
             WE SOLVE WHAT STANDS
           </h2>
-          <h2 className="font-display text-[9vw] leading-[0.88] tracking-tight text-paper/[0.08]">
+          <h2 className="font-display text-[9vw] leading-[0.88] tracking-tight text-paper/[0.22]">
             IN YOUR WAY
           </h2>
-          <p className="mt-6 max-w-md font-mono text-xs uppercase tracking-widest text-muted/40">
+          <p className="mt-6 max-w-md font-mono text-xs uppercase tracking-widest text-muted/60">
             Scroll to enter the specialist bench
           </p>
         </div>
 
-        {/* Exit Background Typography (Zoom-Out Reveal - ZERO BLANK SCREEN!) */}
+        {/* Exit Background Typography (Zoom-Out Reveal — "WE SOLVE WHAT STANDS IN YOUR WAY") */}
         <div
           ref={exitTextRef}
           aria-hidden
           className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center select-none text-center px-4 z-10"
         >
           <span className="font-mono text-micro uppercase tracking-[0.3em] text-accent">
-            Two Continents · One Bench
+            Operational Architecture
           </span>
-          <h2 className="mt-4 font-display text-[7.5vw] leading-[0.92] tracking-tight text-paper/[0.12]">
-            UNBROKEN OPERATIONAL
+          <h2 className="mt-4 font-display text-[9vw] leading-[0.88] tracking-tight text-paper/[0.22]">
+            WE SOLVE WHAT STANDS
           </h2>
-          <h2 className="font-display text-[7.5vw] leading-[0.92] tracking-tight text-paper/[0.12]">
-            MOMENTUM
+          <h2 className="font-display text-[9vw] leading-[0.88] tracking-tight text-paper/[0.22]">
+            IN YOUR WAY
           </h2>
-          <p className="mt-6 max-w-lg font-mono text-xs uppercase tracking-widest text-muted/60">
-            Continuous handoffs across US and EMEA time zones ↓
+          <p className="mt-6 max-w-md font-mono text-xs uppercase tracking-widest text-muted/60">
+            Two Continents · One Bench · Continuous Handoffs ↓
           </p>
         </div>
 
