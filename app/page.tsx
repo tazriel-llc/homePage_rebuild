@@ -6,22 +6,25 @@ import {
   ChapterMechanism,
   ChapterAnswer,
 } from "@/components/sections/chapters";
-import GlobalFootprint from "@/components/sections/global-footprint";
-import ServiceIndex from "@/components/sections/service-index";
-import SolutionsHolder from "@/components/sections/solutions-holder";
+import CommandTerminal from "@/components/sections/command-terminal";
+import SolarRadar from "@/components/sections/solar-radar";
+import ProofLedger from "@/components/sections/proof-ledger";
 import BuildFutureCta from "@/components/sections/build-future-cta";
 import Process from "@/components/sections/process";
 import Recognition from "@/components/sections/recognition";
 import ContactCta from "@/components/sections/contact-cta";
 
 /**
- * Narrative order. Chapters 01–04 are load-bearing: 03 only lands because 02
- * set up the question, and 04 is only an answer because 03 named the variable.
- * Everything after 04 is evidence for the claim 04 makes.
+ * Tazriel Sovereign Digital Flagship — Homepage Architecture.
  *
- * Statement and Bench were cut — Statement said what Chapter 02 now says
- * better, and Bench listed the same seven disciplines ServiceIndex already
- * shows.
+ * Narrative Flow:
+ * 01. Hero — The sovereign thesis & attention mandate.
+ * 02. Chapters 01–04 — Layered physical sheet-over-sheet storytelling.
+ * 03. Command Terminal — Pinned executive console replacing forced slide zooms.
+ * 04. Solar Radar — Live dual-continent 24/5 handoff timeline (Addis Ababa + Skopje).
+ * 05. Proof Ledger — Concrete comparative audit (Conventional BPO failure vs. Sovereign Bench).
+ * 06. Build Your Future — Full-width architectural command atrium and consultation booking.
+ * 07. Delivery Process, Credentials & Direct Engagement.
  */
 export default function Home() {
   return (
@@ -35,10 +38,9 @@ export default function Home() {
         <ChapterMechanism />
         <ChapterAnswer />
 
-        <GlobalFootprint />
-
-        <ServiceIndex />
-        <SolutionsHolder />
+        <CommandTerminal />
+        <SolarRadar />
+        <ProofLedger />
         <BuildFutureCta />
         <Process />
         <Recognition />
