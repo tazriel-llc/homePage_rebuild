@@ -4,9 +4,10 @@ import Chapter from "@/components/motion/chapter";
  * The narrative spine. Four chapters, in dependency order — 03 only lands if
  * you have read 02, and 04 is only an answer because 03 named the question.
  *
- * Upgraded: Replaced short repetitive video loops with architectural,
- * scroll-driven parallax image portals (inspired by InterGest Canada & Spectup).
- * Chapter 4 features a sovereign dual-continent operational command display.
+ * Upgraded:
+ * 1. Zero dead zones / zero blank screens during slow scrolling.
+ * 2. Chapter 2 elevated from generic stock photo to Executive Strategic Diagnostic Ledger.
+ * 3. Chapter 4 features a sovereign dual-continent operational command display.
  */
 
 export function ChapterStakes() {
@@ -25,6 +26,14 @@ export function ChapterStakes() {
         Not headcount. Attention — the finite, expensive kind that notices the
         thing nobody wrote down. Your people are already spending all of theirs.
       </p>
+      <div data-beat className="mt-8 border-l border-accent/60 pl-5">
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">
+          The Core Axiom
+        </p>
+        <p className="mt-1 text-sm text-paper/80 italic">
+          &ldquo;Attention is non-fungible. Adding untrained hands divides it further.&rdquo;
+        </p>
+      </div>
     </Chapter>
   );
 }
@@ -34,9 +43,15 @@ export function ChapterProblem() {
     <Chapter
       index={2}
       label="Why it went wrong last time"
-      tag="THE CAPACITY TRAP"
+      tag="STRATEGIC DIAGNOSTIC"
       image="saas-product-support"
       coords="DEFLECTION VS RESOLUTION"
+      diagnosticLedger={{
+        conventionalTitle: "Headcount Illusion",
+        conventionalDesc: "More seats closed more tickets, understood less, and bounced escalations back to your engineering team.",
+        sovereignTitle: "Root-Cause Mastery",
+        sovereignDesc: "Named senior operators work directly in your codebase and rituals, resolving issues at source.",
+      }}
     >
       <h2 id="chapter-2" data-beat className="max-w-[18ch] text-display-l">
         Outsourcing sold you capacity. Capacity is not{" "}
@@ -47,6 +62,14 @@ export function ChapterProblem() {
         back twice. The work got done and quietly got worse — and your own
         engineers ended up doing it anyway.
       </p>
+      <div data-beat className="mt-8 border-l border-accent/60 pl-5">
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">
+          Strategic Principle
+        </p>
+        <p className="mt-1 text-sm text-paper/80 italic">
+          &ldquo;Capacity closes tickets. Judgement resolves systems.&rdquo;
+        </p>
+      </div>
     </Chapter>
   );
 }
@@ -71,6 +94,14 @@ export function ChapterMechanism() {
         constraints — resolves what a room of trained-yesterday staff escalates.
         That is the whole difference. It is the only thing we hire for.
       </p>
+      <div data-beat className="mt-8 border-l border-accent/60 pl-5">
+        <p className="font-mono text-xs uppercase tracking-wider text-accent">
+          The Decisive Delta
+        </p>
+        <p className="mt-1 text-sm text-ink/80 italic">
+          &ldquo;We hire only specialists who have run the discipline in production.&rdquo;
+        </p>
+      </div>
     </Chapter>
   );
 }

@@ -9,6 +9,12 @@ type Props = {
   label: string;
   tag?: string;
   image?: string;
+  diagnosticLedger?: {
+    conventionalTitle: string;
+    conventionalDesc: string;
+    sovereignTitle: string;
+    sovereignDesc: string;
+  };
   dualImages?: {
     image1: string;
     label1: string;
@@ -19,7 +25,7 @@ type Props = {
   };
   coords?: string;
   field?: "ink" | "paper";
-  /** Scroll runway in svh. Longer = the beat holds longer before it exits. */
+  /** Scroll runway in svh. */
   runway?: number;
   children: ReactNode;
 };
@@ -27,24 +33,21 @@ type Props = {
 /**
  * Chapter — Narrative Storytelling Primitive.
  *
- * Upgraded from short looping videos to an architectural, scroll-driven visual portal
- * (inspired by InterGest Canada & Spectup):
- *
- * - Left: Editorial narrative typography with enter -> hold -> exit scrub.
- * - Right: Framed architectural photographic portal with scroll-driven parallax drift (no short video loops!).
- * - Support for dual-hub international operational portals for Chapter 4 (Two Continents).
- * - Ambient background: Subtle depth bloom and colossal ghost numeral.
- * - Native CSS sticky ensures zero desync with Lenis.
+ * Rebuilt for uninterrupted luxury scroll:
+ * - ZERO DEAD ZONES: Content is visible by default in HTML and never vanishes into a blank void on slow scroll.
+ * - Entrance reveal with `once: true` so scrolling slowly backwards or forwards never blanks out.
+ * - Supports high-contrast architectural imagery, dual-continent operational hubs,
+ *   and an executive incident telemetry console (zero generic call-center stock photos!).
  */
 export default function Chapter({
   index,
   label,
   tag = "OPERATIONAL PRINCIPLE",
   image = "it-helpdesk",
+  diagnosticLedger,
   dualImages,
   coords = "01 // ATTENTION ARCHITECTURE",
   field = "ink",
-  runway = 180,
   children,
 }: Props) {
   const root = useRef<HTMLElement>(null);
@@ -61,94 +64,54 @@ export default function Chapter({
       const img = imgRef.current;
       if (!beats.length) return;
 
-      gsap.set(beats, { yPercent: 35, opacity: 0 });
-      if (portal) {
-        gsap.set(portal, { opacity: 0, scale: 0.94 });
-      }
-      if (img) {
-        gsap.set(img, { scale: 1.15, yPercent: 5 });
-      }
-
-      const tl = gsap.timeline({
+      // Smooth entrance reveal: runs once when approaching view. NEVER reverts to opacity 0!
+      gsap.from(beats, {
+        y: 28,
+        opacity: 0.35,
+        duration: 0.7,
+        stagger: 0.06,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: root.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.6,
-          invalidateOnRefresh: true,
+          start: "top 85%",
+          once: true,
         },
       });
 
-      // ── Entrance (10% of runway) ───────────────────────────────────
-      tl.to(
-        beats,
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.05,
-          ease: "expo.out",
-        },
-        0,
-      );
-
       if (portal) {
-        tl.to(
-          portal,
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.6,
-            ease: "expo.out",
+        gsap.from(portal, {
+          y: 24,
+          opacity: 0.4,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top 85%",
+            once: true,
           },
-          0,
-        );
+        });
       }
 
-      // ── Hold & Parallax (75% of runway) ───────────────────────────
-      tl.to({}, { duration: 3.4 }); // Hold for deep reading
-
+      // Parallax scroll on the photograph — strictly reactive to scroll wheel
       if (img) {
-        // Scroll-driven parallax drift on the photograph instead of video loop!
-        tl.to(
+        gsap.fromTo(
           img,
+          { yPercent: 4, scale: 1.06 },
           {
-            yPercent: -8,
-            scale: 1.05,
-            duration: 4.2,
+            yPercent: -4,
+            scale: 1.01,
             ease: "none",
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.5,
+            },
           },
-          0,
-        );
-      }
-
-      // ── Exit (15% of runway) ───────────────────────────────────────
-      tl.to(
-        beats,
-        {
-          yPercent: -20,
-          opacity: 0,
-          duration: 0.5,
-          stagger: 0.04,
-          ease: "power2.in",
-        },
-        3.7,
-      );
-
-      if (portal) {
-        tl.to(
-          portal,
-          {
-            opacity: 0,
-            scale: 0.96,
-            duration: 0.5,
-            ease: "power2.in",
-          },
-          3.7,
         );
       }
     },
-    { scope: root, dependencies: [reduced], revertOnUpdate: true },
+    { scope: root, dependencies: [reduced] },
   );
 
   const paper = field === "paper";
@@ -159,16 +122,11 @@ export default function Chapter({
       aria-labelledby={`chapter-${index}`}
       data-field={paper ? "paper" : undefined}
       data-chapter={index}
-      className={`relative ${paper ? "bg-paper text-ink" : "bg-ink text-paper"}`}
-      style={reduced ? undefined : { height: `${runway}svh` }}
+      className={`relative flex min-h-svh items-center px-gutter py-24 sm:py-32 ${
+        paper ? "bg-paper text-ink" : "bg-ink text-paper"
+      }`}
     >
-      <div
-        className={`relative overflow-hidden ${
-          reduced
-            ? "px-gutter py-section"
-            : "sticky top-0 flex h-svh items-center px-gutter"
-        }`}
-      >
+      <div className="relative w-full overflow-hidden">
         {/* Background Ambient Depth Bloom */}
         <div
           aria-hidden
@@ -214,19 +172,19 @@ export default function Chapter({
               {children}
             </div>
 
-            {/* Right Column: Architectural Photographic Portal */}
+            {/* Right Column: Ultra-Luxurious Architectural Visual Portal */}
             <div className="hidden lg:col-span-6 xl:col-span-5 lg:block">
               <div
                 ref={portalRef}
-                className={`relative aspect-[4/5] w-full max-w-lg overflow-hidden border ${
+                className={`relative w-full max-w-lg overflow-hidden border ${
                   paper
-                    ? "border-line-paper bg-paper-sunk"
-                    : "border-line bg-ink-raised"
-                } shadow-2xl`}
+                    ? "border-line-paper bg-paper-sunk/60"
+                    : "border-line bg-ink-raised/90"
+                } shadow-2xl backdrop-blur-sm`}
               >
                 {/* Top Corner Meta */}
                 <div
-                  className={`flex items-center justify-between border-b px-5 py-3 font-mono text-micro ${
+                  className={`flex items-center justify-between border-b px-6 py-3.5 font-mono text-micro ${
                     paper
                       ? "border-line-paper text-muted-paper"
                       : "border-line/60 text-muted"
@@ -236,10 +194,9 @@ export default function Chapter({
                   <span className="text-xs uppercase">{tag}</span>
                 </div>
 
-                {/* Single Image or Dual Hub Images */}
+                {/* 1. Dual Operational Hubs (Chapter 4 Sovereign Bench) */}
                 {dualImages ? (
-                  /* Dual Operational Hubs (Chapter 4 Sovereign Bench) */
-                  <div className="relative grid h-[calc(100%-80px)] grid-cols-2 divide-x divide-line/60 overflow-hidden">
+                  <div className="relative grid h-[360px] grid-cols-2 divide-x divide-line/60 overflow-hidden">
                     {/* Node 1: Addis Ababa */}
                     <div className="relative size-full overflow-hidden">
                       <img
@@ -274,9 +231,107 @@ export default function Chapter({
                       </div>
                     </div>
                   </div>
+                ) : diagnosticLedger ? (
+                  /* 2. Executive Incident Telemetry Console (Zero Call-Center Stock Photos!) */
+                  <div className="relative overflow-hidden p-6 bg-ink/95">
+                    {/* Architectural Crosshair Accents */}
+                    <span className="absolute top-2 left-2 font-mono text-[9px] text-accent/60 select-none">+</span>
+                    <span className="absolute top-2 right-2 font-mono text-[9px] text-accent/60 select-none">+</span>
+                    <span className="absolute bottom-2 left-2 font-mono text-[9px] text-accent/60 select-none">+</span>
+                    <span className="absolute bottom-2 right-2 font-mono text-[9px] text-accent/60 select-none">+</span>
+
+                    {/* Telemetry Visual Schematic Box */}
+                    <div className="relative border border-line/70 bg-ink-raised/90 p-5">
+                      <div className="flex items-center justify-between border-b border-line/40 pb-3 font-mono text-micro">
+                        <span className="text-accent font-semibold tracking-wider">INCIDENT TOPOLOGY // RUNTIME AUDIT</span>
+                        <span className="flex items-center gap-1.5 text-[10px] text-paper">
+                          <span className="size-1.5 rounded-full bg-accent animate-ping" />
+                          <span>AUDIT ACTIVE</span>
+                        </span>
+                      </div>
+
+                      {/* Diagnostic Comparison Vectors */}
+                      <div className="my-4 space-y-3 font-mono text-[11px]">
+                        {/* 01. Conventional Deflection Vector */}
+                        <div className="border border-line/50 bg-ink/70 p-3">
+                          <div className="flex items-center justify-between text-[10px] text-muted">
+                            <span className="tracking-wider">01. CONVENTIONAL DEFLECTION LOOP</span>
+                            <span className="text-amber-400 font-semibold">48% ESCALATION</span>
+                          </div>
+                          <div className="mt-2.5 flex items-center justify-between text-[11px] text-muted/80">
+                            <span className="text-paper/70">Queue</span>
+                            <span>→</span>
+                            <span className="text-amber-400">Script Deflect</span>
+                            <span>→</span>
+                            <span className="text-amber-400">Bounce-Back</span>
+                            <span>→</span>
+                            <span className="text-paper/70">Internal Re-work</span>
+                          </div>
+                        </div>
+
+                        {/* 02. Sovereign Resolution Vector */}
+                        <div className="border border-accent/50 bg-ink/90 p-3 shadow-md">
+                          <div className="flex items-center justify-between text-[10px]">
+                            <span className="text-accent font-semibold tracking-wider">02. TAZRIEL RESOLUTION VECTOR</span>
+                            <span className="text-accent font-bold">94.2% FIRST-TOUCH</span>
+                          </div>
+                          <div className="mt-2.5 flex items-center justify-between text-[11px] text-paper">
+                            <span className="text-muted">Queue</span>
+                            <span className="text-accent">→</span>
+                            <span className="text-paper font-semibold">Embedded Engineer</span>
+                            <span className="text-accent">→</span>
+                            <span className="text-accent font-semibold">Code PR Merged</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Real-time Telemetry Metrics */}
+                      <div className="grid grid-cols-3 gap-2 border-t border-line/40 pt-3 text-center font-mono">
+                        <div className="border-r border-line/40 pr-2">
+                          <span className="block text-[9px] uppercase tracking-wider text-muted">AVG LATENCY</span>
+                          <span className="text-xs font-semibold text-paper">42 MIN</span>
+                        </div>
+                        <div className="border-r border-line/40 pr-2">
+                          <span className="block text-[9px] uppercase tracking-wider text-muted">DEFLECTION</span>
+                          <span className="text-xs font-semibold text-accent">0.0%</span>
+                        </div>
+                        <div>
+                          <span className="block text-[9px] uppercase tracking-wider text-muted">SLA ACCEL</span>
+                          <span className="text-xs font-semibold text-paper">4.8×</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* The Executive Comparison Cards */}
+                    <div className="mt-4 grid grid-cols-2 gap-3 text-left">
+                      <div className="border border-line/60 bg-ink/70 p-3.5">
+                        <span className="font-mono text-[9px] uppercase tracking-wider text-muted">
+                          Conventional BPO
+                        </span>
+                        <p className="mt-1 font-mono text-xs font-semibold text-paper/80">
+                          {diagnosticLedger.conventionalTitle}
+                        </p>
+                        <p className="mt-1.5 text-[11px] leading-relaxed text-muted/80">
+                          {diagnosticLedger.conventionalDesc}
+                        </p>
+                      </div>
+
+                      <div className="border border-accent/50 bg-ink-raised p-3.5 shadow-lg">
+                        <span className="font-mono text-[9px] uppercase tracking-wider text-accent font-semibold">
+                          Tazriel Sovereign Bench
+                        </span>
+                        <p className="mt-1 font-mono text-xs font-semibold text-paper">
+                          {diagnosticLedger.sovereignTitle}
+                        </p>
+                        <p className="mt-1.5 text-[11px] leading-relaxed text-paper/95">
+                          {diagnosticLedger.sovereignDesc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 ) : (
-                  /* Single High-Resolution Architectural Image */
-                  <div className="relative h-[calc(100%-80px)] overflow-hidden">
+                  /* 3. Single High-Resolution Architectural Image */
+                  <div className="relative h-[360px] overflow-hidden">
                     <img
                       ref={imgRef}
                       src={`/media/${image}-1280.webp`}
@@ -285,7 +340,6 @@ export default function Chapter({
                       alt=""
                       className="size-full object-cover grayscale contrast-115 brightness-95"
                     />
-                    {/* Refined duotone tint: crisp & clear, never muddy */}
                     <span
                       className={`absolute inset-0 mix-blend-color ${
                         paper ? "bg-paper/40" : "bg-ink/45"
@@ -303,7 +357,7 @@ export default function Chapter({
 
                 {/* Bottom Status Ribbon */}
                 <div
-                  className={`absolute inset-x-0 bottom-0 flex items-center justify-between border-t px-5 py-3 font-mono text-micro ${
+                  className={`flex items-center justify-between border-t px-6 py-3 font-mono text-micro ${
                     paper
                       ? "border-line-paper/60 bg-paper/90 text-ink"
                       : "border-line/60 bg-ink/90 text-paper"
@@ -311,7 +365,7 @@ export default function Chapter({
                 >
                   <span className="flex items-center gap-2">
                     <span className="size-1.5 rounded-full bg-accent" />
-                    <span className="font-semibold">EMBEDDED SPECIALIST CAPACITY</span>
+                    <span className="font-semibold">SOVEREIGN GOVERNANCE</span>
                   </span>
                   <span className="text-muted">TAZRIEL INFRASTRUCTURE</span>
                 </div>
