@@ -16,6 +16,7 @@ type SolutionSlide = {
   image: string;
   slug: string;
   points: string[];
+  metrics: { label: string; value: string };
 };
 
 const slides: SolutionSlide[] = [
@@ -25,15 +26,16 @@ const slides: SolutionSlide[] = [
     category: "LOW-CODE & CLOUD SYSTEMS",
     title: "Software Development & Mendix Architecture",
     summary:
-      "Engineering teams that ship into your codebase, your repositories, and your daily sprint rituals.",
+      "Engineering teams that ship into your codebase, your repositories, and your daily sprint rituals. Certified Mendix Rapid & Advanced practitioners.",
     discipline: "Engineering",
     image: "software-development",
     slug: "software-development",
     points: [
       "Mendix Certified Rapid & Advanced Developers",
       "Native GitHub & GitLab CI/CD integration",
-      "Full-stack web & API service architecture",
+      "Full-stack web & enterprise API architecture",
     ],
+    metrics: { label: "DELIVERY CYCLE", value: "DIRECT SPRINT ALIGNMENT" },
   },
   {
     id: "ai-data",
@@ -41,7 +43,7 @@ const slides: SolutionSlide[] = [
     category: "MACHINE LEARNING INFRASTRUCTURE",
     title: "Data Annotation & AI Model Training",
     summary:
-      "Labelled datasets, RLHF feedback, and model-training pipelines held to verified accuracy benchmarks.",
+      "High-accuracy labelled datasets, RLHF feedback, and model-training pipelines held to verified mathematical accuracy standards.",
     discipline: "Machine Learning",
     image: "data-annotation-and-ai-training",
     slug: "data-annotation-and-ai-training",
@@ -50,6 +52,7 @@ const slides: SolutionSlide[] = [
       "Strict multi-pass QA and agreement scoring",
       "RLHF & LLM evaluation benchmarks",
     ],
+    metrics: { label: "ACCURACY BENCHMARK", value: "≥ 99.2% VERIFIED" },
   },
   {
     id: "m365",
@@ -57,15 +60,16 @@ const slides: SolutionSlide[] = [
     category: "CLOUD GOVERNANCE & IDENTITY",
     title: "Microsoft 365 & Power Platform Administration",
     summary:
-      "Tenant administration, security posture, conditional access, and automated workflow pipelines.",
+      "Tenant administration, security posture, conditional access, and automated workflow pipelines run by credentialed platform administrators.",
     discipline: "Platform Operations",
     image: "microsoft-365-administration",
     slug: "microsoft-365-administration",
     points: [
       "Enterprise Azure AD & identity governance",
       "Power Automate & Power Apps development",
-      "Licensing drift & tenant security audits",
+      "Licensing drift & tenant security posture audits",
     ],
+    metrics: { label: "GOVERNANCE", value: "ZERO ENDPOINT DRIFT" },
   },
   {
     id: "cvent",
@@ -73,7 +77,7 @@ const slides: SolutionSlide[] = [
     category: "ENTERPRISE EVENT INFRASTRUCTURE",
     title: "Meetings & Events Operations (Cvent)",
     summary:
-      "Cvent-certified event operations, from complex registration build-outs through live on-site execution.",
+      "Cvent-certified event operations, from complex registration build-outs through live on-site execution and post-event analytics.",
     discipline: "Event Operations",
     image: "meetings-and-events",
     slug: "meetings-and-events",
@@ -82,6 +86,7 @@ const slides: SolutionSlide[] = [
       "Pre-event path testing and failover plans",
       "Live incident desk & attendee support",
     ],
+    metrics: { label: "PLATFORM STATUS", value: "CVENT CERTIFIED BENCH" },
   },
   {
     id: "support",
@@ -89,31 +94,38 @@ const slides: SolutionSlide[] = [
     category: "RESOLUTION OPERATIONS",
     title: "SaaS Product Support & IT Helpdesk",
     summary:
-      "Tier-3 technical support teams that master your platform deeply enough to resolve rather than deflect.",
+      "Tier-3 technical support teams that master your platform deeply enough to resolve rather than deflect. Real engineers staffing queues.",
     discipline: "Product Support",
     image: "saas-product-support",
     slug: "saas-product-support",
     points: [
       "Engineers staffing queues, not deflecting scripts",
-      "HubSpot Service Hub & Jira Service Desk",
+      "HubSpot Service Hub & Jira Service Management",
       "Direct escalations with reproducible logs",
     ],
+    metrics: { label: "RESOLUTION MODEL", value: "ZERO DEFLECTION QUEUES" },
   },
 ];
 
 /**
- * SolutionsHolder — Directly modelled on InterGest Canada's `solutions_group` & `solutions_holder`:
+ * SolutionsHolder — Inspired by InterGest Canada:
  *
- * 1. Background typography: Massive subtle title across the stage.
+ * 1. Background typography: "WE SOLVE WHAT STANDS IN YOUR WAY".
  * 2. Center framed window portal (starts vertical in the center of the dark screen).
- * 3. On scroll Phase 1: Window smoothly ZOOMS IN to fill the entire viewport.
- * 4. On scroll Phase 2: Slides horizontally through the solutions showcase with rich discipline specs!
+ * 3. PHASE 1: Window smoothly ZOOMS IN to fill the entire viewport.
+ * 4. PHASE 2: Controlled horizontal slide tour with dedicated reading holds (no rushing!).
+ * 5. PHASE 3: Seamless ZOOM-OUT at the end back into a framed card, handing off gracefully
+ *    to Global Footprint with ZERO blank screen!
  */
 export default function SolutionsHolder() {
   const root = useRef<HTMLElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
   const bgTextRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const exitTextRef = useRef<HTMLDivElement>(null);
+  const coverCardRef = useRef<HTMLDivElement>(null);
+  const slidesContainerRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const [activeSlide, setActiveSlide] = useState(0);
 
   const reduced = useReducedMotion();
@@ -122,84 +134,181 @@ export default function SolutionsHolder() {
 
   useGSAP(
     () => {
-      if (!cinematic || !root.current) return;
+      if (!cinematic || !root.current || !portalRef.current) return;
 
       const portal = portalRef.current;
       const bgText = bgTextRef.current;
-      const track = trackRef.current;
-      if (!portal || !track) return;
+      const exitText = exitTextRef.current;
+      const coverCard = coverCardRef.current;
+      const slidesContainer = slidesContainerRef.current;
 
-      // Master scrubbed timeline across the 450vh runway
+      const slideEls = slideRefs.current.filter(Boolean) as HTMLDivElement[];
+
+      // Initial Setup
+      gsap.set(portal, {
+        width: "400px",
+        height: "600px",
+        borderRadius: "8px",
+        borderWidth: "1px",
+        borderColor: "rgba(244, 241, 236, 0.25)",
+      });
+
+      if (coverCard) gsap.set(coverCard, { opacity: 1 });
+      if (slidesContainer) gsap.set(slidesContainer, { opacity: 0 });
+      if (exitText) gsap.set(exitText, { opacity: 0, scale: 0.95 });
+
+      // Position all incoming slides (slides 1 to 4) off-screen to the right
+      slideEls.slice(1).forEach((el) => {
+        gsap.set(el, { xPercent: 100 });
+      });
+      // Slide 0 starts at xPercent: 0
+      if (slideEls[0]) gsap.set(slideEls[0], { xPercent: 0 });
+
+      // Master Timeline across 650vh runway
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.6,
+          scrub: 0.5,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            // Track slide index once past the zoom phase (0.35 -> 1.0)
-            if (self.progress > 0.35) {
-              const slideProgress = (self.progress - 0.35) / 0.65;
-              const idx = Math.min(
-                slides.length - 1,
-                Math.floor(slideProgress * slides.length),
-              );
-              setActiveSlide(idx);
-            } else {
+            const p = self.progress;
+            if (p < 0.22) {
               setActiveSlide(0);
+            } else if (p < 0.36) {
+              setActiveSlide(0);
+            } else if (p < 0.5) {
+              setActiveSlide(1);
+            } else if (p < 0.64) {
+              setActiveSlide(2);
+            } else if (p < 0.78) {
+              setActiveSlide(3);
+            } else {
+              setActiveSlide(4);
             }
           },
         },
       });
 
-      // ── PHASE 1: Zoom the center window portal into full screen ──────────
-      // Portal starts as a vertical 380x580 window, scales to 100vw x 100vh
-      tl.fromTo(
+      // ── PHASE 1: Zoom the window portal into full screen (0.0 -> 1.5) ────────
+      tl.to(
         portal,
-        {
-          width: "380px",
-          height: "580px",
-          borderRadius: "8px",
-          borderColor: "rgba(244, 241, 236, 0.2)",
-        },
         {
           width: "100vw",
           height: "100svh",
           borderRadius: "0px",
           borderColor: "rgba(244, 241, 236, 0)",
-          duration: 1.2,
+          duration: 1.5,
           ease: "power2.inOut",
         },
         0,
       );
 
-      // Background text fades and scales slightly during zoom
       if (bgText) {
         tl.to(
           bgText,
           {
             opacity: 0,
-            scale: 1.12,
-            duration: 0.9,
+            scale: 1.15,
+            duration: 1.2,
             ease: "power2.out",
           },
           0,
         );
       }
 
-      // ── PHASE 2: Horizontal Carousel slides through all solutions ────────
-      // track moves from 0% to -(N - 1) * 100%
-      const totalSlideDistance = (slides.length - 1) * 100;
+      // Crossfade from the clean cover card to the full-width slides container
+      if (coverCard && slidesContainer) {
+        tl.to(
+          coverCard,
+          { opacity: 0, duration: 0.5, ease: "power2.in" },
+          1.0,
+        );
+        tl.to(
+          slidesContainer,
+          { opacity: 1, duration: 0.5, ease: "power2.out" },
+          1.2,
+        );
+      }
+
+      // ── PHASE 2: Slides with dedicated reading holds (1.5 -> 7.5) ───────────
+      // Slide 1 Holds (1.5 -> 2.3)
+      tl.to({}, { duration: 0.8 }, 1.5);
+
+      // Slide 1 -> Slide 2 (2.3 -> 3.1)
+      if (slideEls[1]) {
+        tl.to(
+          slideEls[1],
+          { xPercent: 0, duration: 0.8, ease: "power2.inOut" },
+          2.3,
+        );
+      }
+      // Slide 2 Holds (3.1 -> 3.9)
+      tl.to({}, { duration: 0.8 }, 3.1);
+
+      // Slide 2 -> Slide 3 (3.9 -> 4.7)
+      if (slideEls[2]) {
+        tl.to(
+          slideEls[2],
+          { xPercent: 0, duration: 0.8, ease: "power2.inOut" },
+          3.9,
+        );
+      }
+      // Slide 3 Holds (4.7 -> 5.5)
+      tl.to({}, { duration: 0.8 }, 4.7);
+
+      // Slide 3 -> Slide 4 (5.5 -> 6.3)
+      if (slideEls[3]) {
+        tl.to(
+          slideEls[3],
+          { xPercent: 0, duration: 0.8, ease: "power2.inOut" },
+          5.5,
+        );
+      }
+      // Slide 4 Holds (6.3 -> 7.1)
+      tl.to({}, { duration: 0.8 }, 6.3);
+
+      // Slide 4 -> Slide 5 (7.1 -> 7.9)
+      if (slideEls[4]) {
+        tl.to(
+          slideEls[4],
+          { xPercent: 0, duration: 0.8, ease: "power2.inOut" },
+          7.1,
+        );
+      }
+      // Slide 5 Holds (7.9 -> 8.7)
+      tl.to({}, { duration: 0.8 }, 7.9);
+
+      // ── PHASE 3: The Creative Zoom-Out Exit (8.7 -> 10.0) ──────────────────
+      // When Slide 5 finishes its hold, smoothly zoom out back to framed card!
+      // This completely eliminates the blank screen bug!
       tl.to(
-        track,
+        portal,
         {
-          xPercent: -totalSlideDistance,
-          duration: 2.8,
-          ease: "none",
+          width: "440px",
+          height: "620px",
+          borderRadius: "8px",
+          borderColor: "var(--color-accent)",
+          duration: 1.3,
+          ease: "power2.inOut",
         },
-        1.2,
+        8.7,
       );
+
+      // As portal shrinks, reveal the exit title in background
+      if (exitText) {
+        tl.to(
+          exitText,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.1,
+            ease: "power2.out",
+          },
+          8.9,
+        );
+      }
     },
     { scope: root, dependencies: [cinematic] },
   );
@@ -232,9 +341,9 @@ export default function SolutionsHolder() {
                   <img
                     src={`/media/${s.image}-1280.webp`}
                     alt={s.title}
-                    className="size-full object-cover grayscale"
+                    className="size-full object-cover grayscale contrast-110"
                   />
-                  <div className="absolute inset-0 bg-ink/70 mix-blend-color" />
+                  <div className="absolute inset-0 bg-ink/50 mix-blend-color" />
                 </div>
                 <div className="p-8">
                   <span className="font-mono text-micro text-accent">
@@ -271,20 +380,20 @@ export default function SolutionsHolder() {
     );
   }
 
-  // ── Cinematic: InterGest Canada Zoom-in Portal & Slide Carousel ─────────
+  // ── Cinematic: InterGest Canada Zoom-in, Paced Slides, & Zoom-Out Exit ──
   return (
     <section
       ref={root}
       id="solutions"
       className="solutions_group relative w-full bg-ink text-paper"
-      style={{ height: "480vh" }}
+      style={{ height: "650vh" }}
     >
       <div className="solutions_holder sticky top-0 flex h-svh w-full items-center justify-center overflow-hidden">
-        {/* Background Typography (Image 4 from InterGest: "WE SOLVE WHAT STANDS IN YOUR WAY") */}
+        {/* Entrance Background Typography (InterGest Image 4) */}
         <div
           ref={bgTextRef}
           aria-hidden
-          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center select-none text-center"
+          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center select-none text-center px-4"
         >
           <span className="font-mono text-micro uppercase tracking-[0.3em] text-accent">
             Operational Architecture
@@ -300,36 +409,99 @@ export default function SolutionsHolder() {
           </p>
         </div>
 
-        {/* Center Portal Window (Scales to 100vw x 100vh) */}
+        {/* Exit Background Typography (Zoom-Out Reveal - ZERO BLANK SCREEN!) */}
+        <div
+          ref={exitTextRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center select-none text-center px-4 z-10"
+        >
+          <span className="font-mono text-micro uppercase tracking-[0.3em] text-accent">
+            Two Continents · One Bench
+          </span>
+          <h2 className="mt-4 font-display text-[7.5vw] leading-[0.92] tracking-tight text-paper/[0.12]">
+            UNBROKEN OPERATIONAL
+          </h2>
+          <h2 className="font-display text-[7.5vw] leading-[0.92] tracking-tight text-paper/[0.12]">
+            MOMENTUM
+          </h2>
+          <p className="mt-6 max-w-lg font-mono text-xs uppercase tracking-widest text-muted/60">
+            Continuous handoffs across US and EMEA time zones ↓
+          </p>
+        </div>
+
+        {/* Center Portal Window (Scales to 100vw x 100vh, then Zooms Out at end) */}
         <div
           ref={portalRef}
           data-portal
-          className="relative z-20 flex size-full items-center justify-center overflow-hidden border border-line bg-ink shadow-2xl transition-[border-color]"
+          className="relative z-20 flex size-full items-center justify-center overflow-hidden border bg-ink shadow-2xl transition-[border-color]"
         >
-          {/* Horizontal Conveyor Track across all slides */}
+          {/* ── 1. Pristine Cover Card (Seen inside the small window BEFORE zoom) ── */}
           <div
-            ref={trackRef}
-            className="flex h-full w-[500vw]"
-            style={{ willChange: "transform" }}
+            ref={coverCardRef}
+            className="absolute inset-0 z-30 flex flex-col justify-between p-8 sm:p-10"
+          >
+            <div className="absolute inset-0 -z-10">
+              <img
+                src="/media/software-development-1280.webp"
+                alt="Tazriel Platform Bench"
+                className="size-full object-cover grayscale contrast-110"
+              />
+              <span className="absolute inset-0 bg-ink/55 mix-blend-color" />
+              <span className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
+            </div>
+
+            <div className="flex items-center justify-between font-mono text-micro text-paper">
+              <span className="text-accent">01 // PLATFORM BENCH</span>
+              <span className="flex items-center gap-1.5">
+                <span className="size-1.5 rounded-full bg-accent animate-ping" />
+                <span>ONLINE</span>
+              </span>
+            </div>
+
+            <div>
+              <span className="font-mono text-micro uppercase tracking-wider text-accent">
+                Architectural Focus
+              </span>
+              <h3 className="mt-2 text-display-m font-normal text-paper">
+                The Seven Disciplines
+              </h3>
+              <p className="mt-2 text-xs text-muted">
+                Enterprise systems embedded into your daily operation.
+              </p>
+              <div className="mt-6 flex items-center gap-2 font-mono text-micro text-accent">
+                <span>SCROLL TO ENTER</span>
+                <span>↓</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── 2. Full-Screen Slides Container (Takes over once at full screen) ── */}
+          <div
+            ref={slidesContainerRef}
+            className="absolute inset-0 z-20 size-full overflow-hidden"
           >
             {slides.map((slide, i) => (
               <div
                 key={slide.id}
-                className="relative flex h-full w-screen shrink-0 items-center overflow-hidden px-gutter"
+                ref={(el) => {
+                  slideRefs.current[i] = el;
+                }}
+                className="absolute inset-0 flex size-full items-center px-gutter bg-ink"
+                style={{ willChange: "transform" }}
               >
-                {/* Full-bleed photography plate */}
+                {/* Full-bleed photography plate with high-contrast luxury treatment */}
                 <div aria-hidden className="absolute inset-0 -z-10">
                   <img
                     src={`/media/${slide.image}-1280.webp`}
                     srcSet={`/media/${slide.image}-640.webp 640w, /media/${slide.image}-1280.webp 1280w`}
                     sizes="100vw"
                     alt=""
-                    className="size-full object-cover grayscale"
+                    className="size-full object-cover grayscale contrast-110"
                   />
                   {/* Luxury duotone navy tint */}
-                  <span className="absolute inset-0 bg-ink/75 mix-blend-color" />
-                  <span className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/40" />
-                  <span className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/50" />
+                  <span className="absolute inset-0 bg-ink/55 mix-blend-color" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-ink via-ink/90 to-ink/40" />
+                  <span className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/60" />
                 </div>
 
                 {/* Content Overlay */}
@@ -378,11 +550,17 @@ export default function SolutionsHolder() {
                     </div>
 
                     {/* Right: Architectural Spec Ledger */}
-                    <div className="border border-line bg-ink-raised/70 p-8 backdrop-blur-sm lg:col-span-5">
-                      <span className="font-mono text-micro uppercase tracking-widest text-accent">
-                        Production Competencies
-                      </span>
-                      <ul className="mt-6 space-y-4 border-t border-line/60 pt-6">
+                    <div className="border border-line bg-ink-raised/80 p-8 sm:p-10 shadow-2xl lg:col-span-5">
+                      <div className="flex items-center justify-between border-b border-line/60 pb-4">
+                        <span className="font-mono text-micro uppercase tracking-widest text-accent">
+                          Production Competencies
+                        </span>
+                        <span className="font-mono text-micro text-muted">
+                          0{i + 1} / 05
+                        </span>
+                      </div>
+
+                      <ul className="mt-6 space-y-4">
                         {slide.points.map((pt) => (
                           <li
                             key={pt}
@@ -396,8 +574,10 @@ export default function SolutionsHolder() {
 
                       <div className="mt-8 border-t border-line/60 pt-6">
                         <div className="flex items-center justify-between font-mono text-xs text-muted">
-                          <span>TEAM INTEGRATION</span>
-                          <span className="text-paper">100% EMBEDDED</span>
+                          <span>{slide.metrics.label}</span>
+                          <span className="text-paper font-semibold">
+                            {slide.metrics.value}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -405,29 +585,29 @@ export default function SolutionsHolder() {
                 </div>
               </div>
             ))}
-          </div>
 
-          {/* Bottom Progress Bar & Slide Navigator */}
-          <div className="pointer-events-none absolute bottom-8 inset-x-0 z-30 mx-auto flex max-w-frame items-center justify-between px-gutter">
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-xs font-semibold text-accent">
-                0{activeSlide + 1}
-              </span>
-              <span className="h-px w-8 bg-line" />
-              <span className="font-mono text-xs text-muted">05</span>
-            </div>
+            {/* Bottom Progress Bar & Slide Navigator */}
+            <div className="pointer-events-none absolute bottom-8 inset-x-0 z-30 mx-auto flex max-w-frame items-center justify-between px-gutter">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs font-semibold text-accent">
+                  0{activeSlide + 1}
+                </span>
+                <span className="h-px w-8 bg-line" />
+                <span className="font-mono text-xs text-muted">05</span>
+              </div>
 
-            <div className="flex items-center gap-2">
-              {slides.map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1 transition-all duration-300 ${
-                    i === activeSlide
-                      ? "w-8 bg-accent"
-                      : "w-2 bg-paper/20"
-                  }`}
-                />
-              ))}
+              <div className="flex items-center gap-2">
+                {slides.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`h-1 transition-all duration-300 ${
+                      idx === activeSlide
+                        ? "w-8 bg-accent"
+                        : "w-2 bg-paper/20"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>

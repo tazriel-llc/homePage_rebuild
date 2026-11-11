@@ -6,6 +6,7 @@ import Chapter from "@/components/motion/chapter";
  *
  * Upgraded: Replaced short repetitive video loops with architectural,
  * scroll-driven parallax image portals (inspired by InterGest Canada & Spectup).
+ * Chapter 4 features a sovereign dual-continent operational command display.
  */
 
 export function ChapterStakes() {
@@ -79,9 +80,16 @@ export function ChapterAnswer() {
     <Chapter
       index={4}
       label="What we built instead"
-      tag="TWO CONTINENTS · ONE BENCH"
-      image="software-development"
-      coords="SPRINGFIELD · ADDIS · SKOPJE"
+      tag="SOVEREIGN GLOBAL BENCH"
+      coords="TWO CONTINENTS // 24H COVERAGE"
+      dualImages={{
+        image1: "software-development",
+        label1: "ADDIS ABABA HUB",
+        tz1: "EAT (UTC+3) · 9.03° N",
+        image2: "marketing-and-digital-services",
+        label2: "SKOPJE EMEA HUB",
+        tz2: "CET (UTC+1) · 41.99° N",
+      }}
     >
       <h2 id="chapter-4" data-beat className="max-w-[16ch] text-display-l">
         Senior operators, embedded, on two continents.

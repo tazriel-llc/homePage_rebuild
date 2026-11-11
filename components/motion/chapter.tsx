@@ -9,6 +9,14 @@ type Props = {
   label: string;
   tag?: string;
   image?: string;
+  dualImages?: {
+    image1: string;
+    label1: string;
+    tz1: string;
+    image2: string;
+    label2: string;
+    tz2: string;
+  };
   coords?: string;
   field?: "ink" | "paper";
   /** Scroll runway in svh. Longer = the beat holds longer before it exits. */
@@ -24,6 +32,7 @@ type Props = {
  *
  * - Left: Editorial narrative typography with enter -> hold -> exit scrub.
  * - Right: Framed architectural photographic portal with scroll-driven parallax drift (no short video loops!).
+ * - Support for dual-hub international operational portals for Chapter 4 (Two Continents).
  * - Ambient background: Subtle depth bloom and colossal ghost numeral.
  * - Native CSS sticky ensures zero desync with Lenis.
  */
@@ -32,9 +41,10 @@ export default function Chapter({
   label,
   tag = "OPERATIONAL PRINCIPLE",
   image = "it-helpdesk",
+  dualImages,
   coords = "01 // ATTENTION ARCHITECTURE",
   field = "ink",
-  runway = 175,
+  runway = 180,
   children,
 }: Props) {
   const root = useRef<HTMLElement>(null);
@@ -96,7 +106,7 @@ export default function Chapter({
       }
 
       // ── Hold & Parallax (75% of runway) ───────────────────────────
-      tl.to({}, { duration: 3.2 }); // Hold for deep reading
+      tl.to({}, { duration: 3.4 }); // Hold for deep reading
 
       if (img) {
         // Scroll-driven parallax drift on the photograph instead of video loop!
@@ -104,7 +114,7 @@ export default function Chapter({
           img,
           {
             yPercent: -8,
-            scale: 1.04,
+            scale: 1.05,
             duration: 4.2,
             ease: "none",
           },
@@ -184,7 +194,7 @@ export default function Chapter({
         <div className="relative z-10 mx-auto w-full max-w-frame">
           <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
             {/* Left Column: Narrative Headline & Body */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-6 xl:col-span-7">
               <div
                 data-beat
                 className="mb-8 flex flex-wrap items-center gap-3 text-micro font-medium uppercase tracking-[0.2em]"
@@ -205,10 +215,10 @@ export default function Chapter({
             </div>
 
             {/* Right Column: Architectural Photographic Portal */}
-            <div className="hidden lg:col-span-5 lg:block">
+            <div className="hidden lg:col-span-6 xl:col-span-5 lg:block">
               <div
                 ref={portalRef}
-                className={`relative aspect-[4/5] w-full max-w-md overflow-hidden border ${
+                className={`relative aspect-[4/5] w-full max-w-lg overflow-hidden border ${
                   paper
                     ? "border-line-paper bg-paper-sunk"
                     : "border-line bg-ink-raised"
@@ -223,33 +233,73 @@ export default function Chapter({
                   }`}
                 >
                   <span className="text-accent">{coords}</span>
-                  <span>{tag}</span>
+                  <span className="text-xs uppercase">{tag}</span>
                 </div>
 
-                {/* Parallax Image Plate */}
-                <div className="relative size-full overflow-hidden">
-                  <img
-                    ref={imgRef}
-                    src={`/media/${image}-1280.webp`}
-                    srcSet={`/media/${image}-640.webp 640w, /media/${image}-1280.webp 1280w`}
-                    sizes="(max-width: 1024px) 100vw, 420px"
-                    alt=""
-                    className="size-full object-cover grayscale"
-                  />
-                  {/* Duotone tint overlay */}
-                  <span
-                    className={`absolute inset-0 mix-blend-color ${
-                      paper ? "bg-paper/50" : "bg-ink/75"
-                    }`}
-                  />
-                  <span
-                    className={`absolute inset-0 ${
-                      paper
-                        ? "bg-gradient-to-t from-paper/80 via-transparent to-transparent"
-                        : "bg-gradient-to-t from-ink/90 via-ink/20 to-transparent"
-                    }`}
-                  />
-                </div>
+                {/* Single Image or Dual Hub Images */}
+                {dualImages ? (
+                  /* Dual Operational Hubs (Chapter 4 Sovereign Bench) */
+                  <div className="relative grid h-[calc(100%-80px)] grid-cols-2 divide-x divide-line/60 overflow-hidden">
+                    {/* Node 1: Addis Ababa */}
+                    <div className="relative size-full overflow-hidden">
+                      <img
+                        src={`/media/${dualImages.image1}-1280.webp`}
+                        alt={dualImages.label1}
+                        className="size-full object-cover grayscale contrast-115 brightness-95"
+                      />
+                      <span className="absolute inset-0 bg-ink/40 mix-blend-color" />
+                      <span className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent" />
+                      <div className="absolute bottom-3 left-3 right-3 font-mono text-[10px]">
+                        <span className="block font-semibold text-paper">
+                          {dualImages.label1}
+                        </span>
+                        <span className="text-accent">{dualImages.tz1}</span>
+                      </div>
+                    </div>
+
+                    {/* Node 2: Skopje */}
+                    <div className="relative size-full overflow-hidden">
+                      <img
+                        src={`/media/${dualImages.image2}-1280.webp`}
+                        alt={dualImages.label2}
+                        className="size-full object-cover grayscale contrast-115 brightness-95"
+                      />
+                      <span className="absolute inset-0 bg-ink/40 mix-blend-color" />
+                      <span className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent" />
+                      <div className="absolute bottom-3 left-3 right-3 font-mono text-[10px]">
+                        <span className="block font-semibold text-paper">
+                          {dualImages.label2}
+                        </span>
+                        <span className="text-accent">{dualImages.tz2}</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* Single High-Resolution Architectural Image */
+                  <div className="relative h-[calc(100%-80px)] overflow-hidden">
+                    <img
+                      ref={imgRef}
+                      src={`/media/${image}-1280.webp`}
+                      srcSet={`/media/${image}-640.webp 640w, /media/${image}-1280.webp 1280w`}
+                      sizes="(max-width: 1024px) 100vw, 480px"
+                      alt=""
+                      className="size-full object-cover grayscale contrast-115 brightness-95"
+                    />
+                    {/* Refined duotone tint: crisp & clear, never muddy */}
+                    <span
+                      className={`absolute inset-0 mix-blend-color ${
+                        paper ? "bg-paper/40" : "bg-ink/45"
+                      }`}
+                    />
+                    <span
+                      className={`absolute inset-0 ${
+                        paper
+                          ? "bg-gradient-to-t from-paper/80 via-transparent to-transparent"
+                          : "bg-gradient-to-t from-ink/90 via-ink/20 to-transparent"
+                      }`}
+                    />
+                  </div>
+                )}
 
                 {/* Bottom Status Ribbon */}
                 <div
@@ -261,9 +311,9 @@ export default function Chapter({
                 >
                   <span className="flex items-center gap-2">
                     <span className="size-1.5 rounded-full bg-accent" />
-                    <span>VERIFIED OPERATIONAL CASE</span>
+                    <span className="font-semibold">EMBEDDED SPECIALIST CAPACITY</span>
                   </span>
-                  <span className="text-muted">TAZRIEL BENCH</span>
+                  <span className="text-muted">TAZRIEL INFRASTRUCTURE</span>
                 </div>
               </div>
             </div>
