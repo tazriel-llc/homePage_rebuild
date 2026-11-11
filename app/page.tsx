@@ -1,4 +1,3 @@
-import Grain from "@/components/ui/grain";
 import ChapterRail from "@/components/motion/chapter-rail";
 import Hero from "@/components/sections/hero";
 import {
@@ -7,8 +6,10 @@ import {
   ChapterMechanism,
   ChapterAnswer,
 } from "@/components/sections/chapters";
+import GlobalFootprint from "@/components/sections/global-footprint";
 import ServiceIndex from "@/components/sections/service-index";
-import Capabilities from "@/components/sections/capabilities";
+import SolutionsHolder from "@/components/sections/solutions-holder";
+import BuildFutureCta from "@/components/sections/build-future-cta";
 import Process from "@/components/sections/process";
 import Recognition from "@/components/sections/recognition";
 import ContactCta from "@/components/sections/contact-cta";
@@ -25,7 +26,6 @@ import ContactCta from "@/components/sections/contact-cta";
 export default function Home() {
   return (
     <>
-      <Grain />
       <ChapterRail />
       <main id="main">
         <Hero />
@@ -35,8 +35,11 @@ export default function Home() {
         <ChapterMechanism />
         <ChapterAnswer />
 
+        <GlobalFootprint />
+
         <ServiceIndex />
-        <Capabilities />
+        <SolutionsHolder />
+        <BuildFutureCta />
         <Process />
         <Recognition />
         <ContactCta />

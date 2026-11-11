@@ -121,20 +121,28 @@ export default function Nav() {
   const inverted = onPaper && !open;
   const fg = inverted ? "text-ink" : "text-paper";
   const muted = inverted ? "text-muted-paper" : "text-muted";
+  const borderClass = inverted ? "border-line-paper bg-paper/95" : "border-line bg-ink/95";
 
   return (
     <>
       <div
         ref={barRef}
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${fg}`}
+        className={`fixed inset-x-0 top-0 z-50 border-b ${borderClass} transition-colors duration-300 ${fg}`}
       >
         <div className="mx-auto flex max-w-frame items-center justify-between px-gutter py-5">
-          <Link
-            href="/"
-            className="text-sm font-semibold uppercase tracking-[0.24em]"
-          >
-            Tazriel
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="text-sm font-semibold uppercase tracking-[0.24em]"
+            >
+              Tazriel
+            </Link>
+            <span className="hidden h-3 w-px bg-current opacity-20 sm:inline-block" />
+            <span className="hidden items-center gap-1.5 font-mono text-micro uppercase tracking-wider text-accent sm:inline-flex">
+              <span className="size-1.5 rounded-full bg-accent" />
+              US · EMEA
+            </span>
+          </div>
 
           <nav
             aria-label="Primary"

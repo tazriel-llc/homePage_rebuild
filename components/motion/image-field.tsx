@@ -136,7 +136,7 @@ export default function ImageField({
           />
           <span
             className={`absolute inset-0 mix-blend-color ${
-              tint === "depth" ? "bg-depth" : "bg-ink"
+              tint === "depth" ? "bg-ink/75" : "bg-ink"
             }`}
           />
         </figure>
