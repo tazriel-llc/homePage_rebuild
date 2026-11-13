@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useId } from "react";
+import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
@@ -11,7 +11,7 @@ type ServiceItem = {
   iconType: "waveform" | "rings" | "matrix" | "circuit" | "prism" | "diamond";
 };
 
-// 3 Left Services
+// 3 Left Services (Compact square glassmorphism cards)
 const leftServices: ServiceItem[] = [
   {
     id: "ai-data",
@@ -36,7 +36,7 @@ const leftServices: ServiceItem[] = [
   },
 ];
 
-// 3 Right Services
+// 3 Right Services (Compact square glassmorphism cards)
 const rightServices: ServiceItem[] = [
   {
     id: "software",
@@ -70,7 +70,7 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
       return (
         <svg
           aria-hidden
-          style={{ width: "36px", height: "36px" }}
+          style={{ width: "32px", height: "32px" }}
           viewBox="0 0 48 48"
           fill="none"
           stroke="rgba(255, 255, 255, 0.95)"
@@ -90,7 +90,7 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
       return (
         <svg
           aria-hidden
-          style={{ width: "36px", height: "36px" }}
+          style={{ width: "32px", height: "32px" }}
           viewBox="0 0 48 48"
           fill="none"
           stroke="rgba(255, 255, 255, 0.95)"
@@ -106,7 +106,7 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
       return (
         <svg
           aria-hidden
-          style={{ width: "36px", height: "36px" }}
+          style={{ width: "32px", height: "32px" }}
           viewBox="0 0 48 48"
           fill="none"
           stroke="rgba(255, 255, 255, 0.95)"
@@ -121,7 +121,7 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
       return (
         <svg
           aria-hidden
-          style={{ width: "36px", height: "36px" }}
+          style={{ width: "32px", height: "32px" }}
           viewBox="0 0 48 48"
           fill="none"
           stroke="rgba(255, 255, 255, 0.95)"
@@ -137,7 +137,7 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
       return (
         <svg
           aria-hidden
-          style={{ width: "36px", height: "36px" }}
+          style={{ width: "32px", height: "32px" }}
           viewBox="0 0 48 48"
           fill="none"
           stroke="rgba(255, 255, 255, 0.95)"
@@ -152,7 +152,7 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
       return (
         <svg
           aria-hidden
-          style={{ width: "36px", height: "36px" }}
+          style={{ width: "32px", height: "32px" }}
           viewBox="0 0 48 48"
           fill="none"
           stroke="rgba(255, 255, 255, 0.95)"
@@ -166,9 +166,36 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
   }
 }
 
+// 7 Hero letters for TAZRIEL initial natural 3D vortex scatter coords
+// Designed with realistic depth, spiral flow, and gentle scale (no giant flat cards)
+const heroScatter = [
+  { char: "T", x: -380, y: 140, rot: -18, scale: 0.85, blur: 2 },
+  { char: "A", x: -160, y: -240, rot: 14, scale: 0.78, blur: 3 },
+  { char: "Z", x: -110, y: -110, rot: -12, scale: 0.72, blur: 2 },
+  { char: "R", x: 260, y: 180, rot: 20, scale: 0.88, blur: 3 },
+  { char: "I", x: 70, y: 190, rot: -8, scale: 0.75, blur: 2 },
+  { char: "E", x: 280, y: -160, rot: 16, scale: 0.82, blur: 3 },
+  { char: "L", x: 390, y: -60, rot: -14, scale: 0.86, blur: 2 },
+];
+
+// Deep vortex background depth letters (ambient particles from GIF)
+// All serif Roman letters, no plain pipes or un-styled marks
+const depthLetters = [
+  { char: "R", x: -440, y: -260, rot: 35, scale: 0.65, blur: 5 },
+  { char: "E", x: -360, y: -150, rot: -20, scale: 0.55, blur: 6 },
+  { char: "L", x: -310, y: 220, rot: 12, scale: 0.6, blur: 5 },
+  { char: "Z", x: -260, y: 310, rot: -25, scale: 0.5, blur: 6 },
+  { char: "A", x: -170, y: -330, rot: 18, scale: 0.55, blur: 5 },
+  { char: "T", x: -110, y: 280, rot: -12, scale: 0.65, blur: 4 },
+  { char: "R", x: 170, y: -250, rot: -22, scale: 0.55, blur: 5 },
+  { char: "E", x: 260, y: 270, rot: 25, scale: 0.6, blur: 4 },
+  { char: "L", x: 370, y: -210, rot: -15, scale: 0.5, blur: 6 },
+  { char: "A", x: 410, y: 130, rot: 20, scale: 0.55, blur: 5 },
+  { char: "Z", x: 450, y: -70, rot: -30, scale: 0.5, blur: 6 },
+];
+
 export default function ArcServices() {
   const root = useRef<HTMLElement>(null);
-  const filterId = useId();
   const reduced = useReducedMotion();
 
   useGSAP(
@@ -178,221 +205,314 @@ export default function ArcServices() {
       const q = gsap.utils.selector(root);
       const container = root.current;
 
-      const monolith = q("[data-tazriel-monolith]");
+      const heroLetterEls = q("[data-hero-letter]");
+      const depthLetterEls = q("[data-depth-letter]");
+      const assembledWordmark = q("[data-assembled-wordmark]");
+      const assembledSub = q("[data-assembled-sub]");
+      const orangeGlow = q("[data-orange-glow]");
+      const centerVortex = q("[data-center-vortex]");
       const leftCardEls = q("[data-stream-left]");
       const rightCardEls = q("[data-stream-right]");
       const blinds = q("[data-trionn-blind]");
       const blindsContainer = q("[data-trionn-blinds-wrap]");
       const outroText = q("[data-trionn-outro]");
 
-      // Monolith is ALWAYS permanently visible in center
-      gsap.set(monolith, { scale: 1, opacity: 1, rotationY: 0, rotationX: 0 });
+      // Initial state: 3D scattered letters in spiral vortex
+      heroScatter.forEach((data, i) => {
+        const el = heroLetterEls[i];
+        if (!el) return;
+        gsap.set(el, {
+          x: data.x,
+          y: data.y,
+          rotationZ: data.rot,
+          scale: data.scale,
+          opacity: 0.8,
+          filter: `blur(${data.blur}px)`,
+        });
+      });
 
-      // INITIAL POSITIONS (Guaranteed 40vh vertical gap, NEVER overlap):
-      // Left Cards:
-      // Card 0: Upper Left (-20vh)
-      // Card 1: Lower Left (20vh)
-      // Card 2: Below Screen (60vh)
-      gsap.set(leftCardEls[0], { yPercent: -50, y: "-20vh", x: -15, rotation: -2, opacity: 1, scale: 1 });
-      gsap.set(leftCardEls[1], { yPercent: -50, y: "20vh", x: 0, rotation: 0, opacity: 1, scale: 1 });
-      gsap.set(leftCardEls[2], { yPercent: -50, y: "60vh", x: -15, rotation: 2, opacity: 0, scale: 0.94 });
+      depthLetters.forEach((data, i) => {
+        const el = depthLetterEls[i];
+        if (!el) return;
+        gsap.set(el, {
+          x: data.x,
+          y: data.y,
+          rotationZ: data.rot,
+          scale: data.scale,
+          opacity: 0.35,
+          filter: `blur(${data.blur}px)`,
+        });
+      });
 
-      // Right Cards:
-      // Card 0: Lower Right (20vh)
-      // Card 1: Upper Right (-20vh)
-      // Card 2: Above Screen (-60vh)
-      gsap.set(rightCardEls[0], { yPercent: -50, y: "20vh", x: 15, rotation: 2, opacity: 1, scale: 1 });
-      gsap.set(rightCardEls[1], { yPercent: -50, y: "-20vh", x: 0, rotation: 0, opacity: 1, scale: 1 });
-      gsap.set(rightCardEls[2], { yPercent: -50, y: "-60vh", x: 15, rotation: -2, opacity: 0, scale: 0.94 });
+      gsap.set(orangeGlow, { opacity: 0.15, scale: 0.7 });
+      gsap.set(centerVortex, { opacity: 0.5, scale: 1 });
+      gsap.set(assembledSub, { opacity: 0, y: 12 });
+
+      // INITIAL POSITIONS FOR CARDS:
+      // USER RULE: "always the cards are coming from left and right don't fade in them"
+      // Cards start PHYSICALLY OFFSCREEN to the left and right at full opacity (1)!
+      // Left Cards (start offscreen to the left):
+      gsap.set(leftCardEls[0], { x: -500, yPercent: -50, y: "-20vh", rotation: -2, opacity: 1, scale: 1 });
+      gsap.set(leftCardEls[1], { x: -500, yPercent: -50, y: "20vh", rotation: 0, opacity: 1, scale: 1 });
+      gsap.set(leftCardEls[2], { x: -500, yPercent: -50, y: "65vh", rotation: 2, opacity: 1, scale: 0.94 });
+
+      // Right Cards (start offscreen to the right):
+      gsap.set(rightCardEls[0], { x: 500, yPercent: -50, y: "20vh", rotation: 2, opacity: 1, scale: 1 });
+      gsap.set(rightCardEls[1], { x: 500, yPercent: -50, y: "-20vh", rotation: 0, opacity: 1, scale: 1 });
+      gsap.set(rightCardEls[2], { x: 500, yPercent: -50, y: "-65vh", rotation: -2, opacity: 1, scale: 0.94 });
 
       gsap.set(blindsContainer, { pointerEvents: "none" });
       gsap.set(blinds, { scaleX: 0 });
       gsap.set(outroText, { opacity: 0, y: 30 });
 
-      // Master Timeline (scrub: 1.5)
+      // Master Timeline (end: "+=6000", scrub: 2)
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: "+=4500",
+          end: "+=6000",
           pin: true,
-          scrub: 1.5,
+          scrub: 2,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      // Monolith 3D perspective tilt during scroll
+      // ─────────────────────────────────────────────────────────────────────────────
+      // STAGE 1: 0% -> 34% | 3D Scattered Letters Swirl Toward Center & Assemble
+      // ─────────────────────────────────────────────────────────────────────────────
+      heroScatter.forEach((_, i) => {
+        const el = heroLetterEls[i];
+        if (!el) return;
+        masterTl.to(
+          el,
+          {
+            x: 0,
+            y: 0,
+            rotationZ: 0,
+            scale: 1,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.32,
+            ease: "power3.inOut",
+          },
+          0.02,
+        );
+      });
+
+      depthLetters.forEach((data, i) => {
+        const el = depthLetterEls[i];
+        if (!el) return;
+        masterTl.to(
+          el,
+          {
+            x: data.x * 0.2,
+            y: data.y * 0.2,
+            rotationZ: data.rot * 1.8,
+            opacity: 0.12,
+            filter: "blur(7px)",
+            duration: 0.30,
+            ease: "power2.inOut",
+          },
+          0.02,
+        );
+      });
+
+      // Central vortex visual rotates in 3D
       masterTl.to(
-        monolith,
+        centerVortex,
         {
-          rotationY: 10,
-          rotationX: -5,
-          scale: 1.04,
-          duration: 0.8,
+          rotation: 40,
+          scale: 1.12,
+          duration: 0.34,
           ease: "none",
         },
         0,
       );
 
-      // LEFT COLUMN: Bottom to Top Arc Flow
-      // Phase 1 (0.05 -> 0.40):
-      // Card 0 glides from -20vh -> -62vh (exits top)
+      // Orange ambient backlight bloom emerges behind TAZRIEL
+      masterTl.to(
+        orangeGlow,
+        {
+          opacity: 0.95,
+          scale: 1.45,
+          duration: 0.12,
+          ease: "power2.out",
+        },
+        0.28,
+      );
+
+      // Subtitle 'SOVEREIGN BENCH' reveals smoothly under assembled wordmark
+      masterTl.to(
+        assembledSub,
+        {
+          opacity: 0.85,
+          y: 0,
+          duration: 0.08,
+          ease: "power2.out",
+        },
+        0.30,
+      );
+
+      // ─────────────────────────────────────────────────────────────────────────────
+      // STAGE 2: 32% -> 88% | TAZRIEL STAYS IN CENTER + CARDS GLIDE IN FROM LEFT & RIGHT
+      // USER RULE: "keep tazriel in the center dont disapear it"
+      // USER RULE: "always the cards are coming from left and right dont fade in them"
+      // ─────────────────────────────────────────────────────────────────────────────
+
+      // Central TAZRIEL holds firm and breathes gently throughout the entire card showcase
+      masterTl.to(
+        assembledWordmark,
+        {
+          scale: 1.03,
+          duration: 0.54,
+          ease: "none",
+        },
+        0.34,
+      );
+
+      masterTl.to(
+        orangeGlow,
+        {
+          scale: 1.55,
+          opacity: 1,
+          duration: 0.54,
+          ease: "none",
+        },
+        0.34,
+      );
+
+      // 1. CARDS GLIDE IN FROM SIDES (NO OPACITY FADE-IN!)
+      // Left Cards enter from offscreen left (x: -500 -> 0)
       masterTl.to(
         leftCardEls[0],
         {
-          y: "-62vh",
-          x: -25,
-          rotation: -4,
-          opacity: 0,
-          scale: 0.92,
-          duration: 0.35,
-          ease: "power2.inOut",
-        },
-        0.05,
-      );
-
-      // Card 1 glides from 20vh -> -20vh (takes Upper Left)
-      masterTl.to(
-        leftCardEls[1],
-        {
-          y: "-20vh",
-          x: -15,
-          rotation: -2,
-          opacity: 1,
-          scale: 1,
-          duration: 0.35,
-          ease: "power2.inOut",
-        },
-        0.05,
-      );
-
-      // Card 2 enters from 60vh -> 20vh (takes Lower Left)
-      masterTl.to(
-        leftCardEls[2],
-        {
-          y: "20vh",
           x: 0,
-          rotation: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.35,
-          ease: "power2.inOut",
+          duration: 0.14,
+          ease: "power3.out",
         },
-        0.05,
+        0.32,
       );
 
-      // Phase 2 (0.42 -> 0.78):
-      // Card 1 glides from -20vh -> -62vh (exits top)
       masterTl.to(
         leftCardEls[1],
         {
-          y: "-62vh",
-          x: -25,
-          rotation: -4,
-          opacity: 0,
-          scale: 0.92,
-          duration: 0.35,
-          ease: "power2.inOut",
+          x: 0,
+          duration: 0.14,
+          ease: "power3.out",
         },
-        0.42,
+        0.34,
       );
 
-      // Card 2 glides from 20vh -> -20vh (takes Upper Left)
-      masterTl.to(
-        leftCardEls[2],
-        {
-          y: "-20vh",
-          x: -15,
-          rotation: -2,
-          opacity: 1,
-          scale: 1,
-          duration: 0.35,
-          ease: "power2.inOut",
-        },
-        0.42,
-      );
-
-      // RIGHT COLUMN: Top to Bottom Arc Flow
-      // Phase 1 (0.05 -> 0.40):
-      // Card 0 glides from 20vh -> 62vh (exits bottom)
+      // Right Cards enter from offscreen right (x: 500 -> 0)
       masterTl.to(
         rightCardEls[0],
         {
-          y: "62vh",
-          x: 25,
-          rotation: 4,
-          opacity: 0,
-          scale: 0.92,
-          duration: 0.35,
-          ease: "power2.inOut",
+          x: 0,
+          duration: 0.14,
+          ease: "power3.out",
         },
-        0.05,
+        0.32,
       );
 
-      // Card 1 glides from -20vh -> 20vh (takes Lower Right)
       masterTl.to(
         rightCardEls[1],
         {
-          y: "20vh",
-          x: 15,
-          rotation: 2,
-          opacity: 1,
-          scale: 1,
-          duration: 0.35,
-          ease: "power2.inOut",
+          x: 0,
+          duration: 0.14,
+          ease: "power3.out",
         },
-        0.05,
+        0.34,
       );
 
-      // Card 2 enters from -60vh -> -20vh (takes Upper Right)
+      // 2. CONTINUOUS DUAL COUNTER-ARC FLOW (Left: Bottom to Top | Right: Top to Bottom)
+      // Left Cards flowing upward along arc:
       masterTl.to(
-        rightCardEls[2],
+        leftCardEls[0],
+        {
+          y: "-65vh",
+          x: -25,
+          rotation: -4,
+          scale: 0.92,
+          duration: 0.36,
+          ease: "power2.inOut",
+        },
+        0.48,
+      );
+
+      masterTl.to(
+        leftCardEls[1],
         {
           y: "-20vh",
           x: 0,
-          rotation: 0,
-          opacity: 1,
+          rotation: -2,
           scale: 1,
-          duration: 0.35,
+          duration: 0.36,
           ease: "power2.inOut",
         },
-        0.05,
+        0.48,
       );
 
-      // Phase 2 (0.42 -> 0.78):
-      // Card 1 glides from 20vh -> 62vh (exits bottom)
+      // Third Left Card glides in from bottom arc into view
+      masterTl.to(
+        leftCardEls[2],
+        {
+          x: 0,
+          y: "20vh",
+          rotation: 0,
+          scale: 1,
+          duration: 0.36,
+          ease: "power2.inOut",
+        },
+        0.48,
+      );
+
+      // Right Cards flowing downward along arc:
+      masterTl.to(
+        rightCardEls[0],
+        {
+          y: "65vh",
+          x: 25,
+          rotation: 4,
+          scale: 0.92,
+          duration: 0.36,
+          ease: "power2.inOut",
+        },
+        0.48,
+      );
+
       masterTl.to(
         rightCardEls[1],
         {
-          y: "62vh",
-          x: 25,
-          rotation: 4,
-          opacity: 0,
-          scale: 0.92,
-          duration: 0.35,
+          y: "20vh",
+          x: 0,
+          rotation: 2,
+          scale: 1,
+          duration: 0.36,
           ease: "power2.inOut",
         },
-        0.42,
+        0.48,
       );
 
-      // Card 2 glides from -20vh -> 20vh (takes Lower Right)
+      // Third Right Card glides in from top arc into view
       masterTl.to(
         rightCardEls[2],
         {
-          y: "20vh",
-          x: 15,
-          rotation: 2,
-          opacity: 1,
+          x: 0,
+          y: "-20vh",
+          rotation: 0,
           scale: 1,
-          duration: 0.35,
+          duration: 0.36,
           ease: "power2.inOut",
         },
-        0.42,
+        0.48,
       );
 
-      // Smooth Breaking Transition (Phase 3: 0.80 -> 1.00)
-      masterTl.set(blindsContainer, { pointerEvents: "auto" }, 0.80);
+      // ─────────────────────────────────────────────────────────────────────────────
+      // STAGE 3: 88% -> 100% | SMOOTH BREAKING PAPER TRANSITION
+      // (Only at the very end does the section transition into the next)
+      // ─────────────────────────────────────────────────────────────────────────────
+      masterTl.set(blindsContainer, { pointerEvents: "auto" }, 0.90);
 
       blinds.forEach((blind, idx) => {
         const fromLeft = idx % 2 === 0;
@@ -402,22 +522,22 @@ export default function ArcServices() {
           blind,
           {
             scaleX: 1,
-            duration: 0.08,
+            duration: 0.05,
             ease: "power3.inOut",
           },
-          0.81 + idx * 0.025,
+          0.91 + idx * 0.02,
         );
       });
 
-      // Expand bands to fuse solid
+      // Expand bands to fuse solid into paper ground
       masterTl.to(
         blinds,
         {
           scaleY: 2.8,
-          duration: 0.06,
+          duration: 0.04,
           ease: "power2.inOut",
         },
-        0.91,
+        0.96,
       );
 
       // Reveal outro text
@@ -426,10 +546,10 @@ export default function ArcServices() {
         {
           opacity: 1,
           y: 0,
-          duration: 0.06,
+          duration: 0.04,
           ease: "power2.out",
         },
-        0.93,
+        0.97,
       );
     },
     { scope: root, dependencies: [reduced] },
@@ -447,6 +567,7 @@ export default function ArcServices() {
         overflow: "hidden",
         backgroundColor: "#020035",
         userSelect: "none",
+        perspective: "1200px",
       }}
     >
       {/* ── SEAMLESS TOP & BOTTOM GRADIENT FEATHERS (Seamless Hero Blend) ── */}
@@ -477,18 +598,7 @@ export default function ArcServices() {
         }}
       />
 
-      {/* ── SVG Filter for Stone Texture ── */}
-      <svg aria-hidden style={{ position: "absolute", width: 0, height: 0, pointerEvents: "none" }}>
-        <filter id={`stone-noise-${filterId}`}>
-          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.07" numOctaves="3" result="noise" />
-          <feColorMatrix
-            type="matrix"
-            values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 0.35 0"
-          />
-        </filter>
-      </svg>
-
-      {/* ── AMBIENT COSMIC DEPTH BLOOMS (NO TILED WALLPAPER) ── */}
+      {/* ── AMBIENT COSMIC DEPTH BLOOMS (Clean, Never Tiled) ── */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
         <div
           style={{
@@ -504,23 +614,42 @@ export default function ArcServices() {
             background: "radial-gradient(circle, #2100b1 0%, transparent 70%)",
           }}
         />
-        <div
+      </div>
+
+      {/* ── CENTER VORTEX VISUAL (Single Centered Graphic, Never Tiled) ── */}
+      <div
+        data-center-vortex
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "650px",
+          height: "650px",
+          maxWidth: "90vw",
+          maxHeight: "90vw",
+          pointerEvents: "none",
+          zIndex: 5,
+          borderRadius: "50%",
+          overflow: "hidden",
+          mixBlendMode: "screen",
+          maskImage: "radial-gradient(circle, black 38%, transparent 72%)",
+          WebkitMaskImage: "radial-gradient(circle, black 38%, transparent 72%)",
+        }}
+      >
+        <img
+          src="/media/letter-vortex.png"
+          alt=""
           style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "500px",
-            height: "500px",
-            borderRadius: "50%",
-            opacity: 0.35,
-            filter: "blur(90px)",
-            background: "radial-gradient(circle, rgba(237, 76, 0, 0.75) 0%, transparent 70%)",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            filter: "contrast(1.15) brightness(0.9)",
           }}
         />
       </div>
 
-      {/* ── MASSIVE CENTRAL TAZRIEL MONOLITH (PERMANENTLY VISIBLE IN MIDDLE) ── */}
+      {/* ── CENTER ANCHORED STAGE: TAZRIEL WORDMARK + ORANGE BACKLIGHT ── */}
       <div
         style={{
           position: "absolute",
@@ -529,273 +658,272 @@ export default function ArcServices() {
           alignItems: "center",
           justifyContent: "center",
           pointerEvents: "none",
-          zIndex: 10,
+          zIndex: 20,
+          overflow: "hidden",
         }}
       >
+        {/* Subtle orange backlight bloom behind TAZRIEL */}
         <div
-          data-tazriel-monolith
+          data-orange-glow
+          style={{
+            position: "absolute",
+            width: "550px",
+            height: "550px",
+            borderRadius: "50%",
+            filter: "blur(95px)",
+            background: "radial-gradient(circle, rgba(237, 76, 0, 0.8) 0%, rgba(33, 0, 177, 0.4) 60%, transparent 80%)",
+            willChange: "transform, opacity",
+          }}
+        />
+
+        {/* Ambient Depth Letters floating in background (All Classic Serif, no pipes) */}
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {depthLetters.map((dl, idx) => (
+            <span
+              key={idx}
+              data-depth-letter
+              style={{
+                position: "absolute",
+                fontFamily: "'Instrument Serif', Georgia, serif",
+                fontWeight: 400,
+                fontSize: "2.8rem",
+                color: "rgba(255, 255, 255, 0.3)",
+                userSelect: "none",
+                willChange: "transform, opacity",
+              }}
+            >
+              {dl.char}
+            </span>
+          ))}
+        </div>
+
+        {/* ── TAZRIEL WORDMARK CONTAINER ── */}
+        {/* Spaced with majestic luxury tracking, zero overlapping, letters never touch */}
+        <div
           style={{
             position: "relative",
-            width: "440px",
-            height: "440px",
-            maxWidth: "85vw",
-            maxHeight: "85vw",
-            borderRadius: "28px",
-            overflow: "hidden",
-            background: "radial-gradient(circle at 35% 30%, #2c2e3c 0%, #171822 50%, #0a0b12 85%, #040508 100%)",
-            boxShadow:
-              "inset 0 1px 3px rgba(255,255,255,0.3), inset 0 -3px 6px rgba(0,0,0,0.95), 0 35px 90px -10px rgba(0,0,0,0.95)",
-            border: "1px solid rgba(255, 255, 255, 0.12)",
-            willChange: "transform",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 10,
           }}
         >
-          {/* Stone Texture Filter */}
           <div
+            data-assembled-wordmark
             style={{
-              position: "absolute",
-              inset: 0,
-              opacity: 0.35,
-              mixBlendMode: "overlay",
-              filter: `url(#stone-noise-${filterId})`,
-              background: "#555",
-              pointerEvents: "none",
-            }}
-          />
-
-          {/* Specular Sheen */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 50%)",
-              pointerEvents: "none",
-            }}
-          />
-
-          {/* Deep Carved Tazriel Sigil (Massive Scale) */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              flexDirection: "column",
+              position: "relative",
+              display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              textAlign: "center",
-              padding: "32px",
+              gap: "clamp(18px, 2.8vw, 38px)",
+              willChange: "transform",
             }}
           >
-            <svg
-              style={{
-                width: "200px",
-                height: "200px",
-                color: "rgba(244, 241, 236, 0.9)",
-                filter: "drop-shadow(0 6px 16px rgba(0,0,0,0.95))",
-              }}
-              viewBox="0 0 100 100"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path d="M32 25 L55 60 L45 60 L24 25 Z" fill="currentColor" fillOpacity="0.88" />
-              <path d="M52 25 L75 60 L65 60 L44 25 Z" fill="currentColor" fillOpacity="0.88" />
-              <line
-                x1="18"
-                y1="72"
-                x2="82"
-                y2="72"
-                stroke="currentColor"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeOpacity="0.65"
-              />
-            </svg>
-
-            <span
-              style={{
-                marginTop: "16px",
-                fontFamily: "monospace",
-                fontSize: "12px",
-                letterSpacing: "0.28em",
-                color: "rgba(244, 241, 236, 0.75)",
-                fontWeight: 600,
-                textTransform: "uppercase",
-              }}
-            >
-              TAZRIEL SOVEREIGN BENCH
-            </span>
+            {heroScatter.map((hl, idx) => (
+              <span
+                key={idx}
+                data-hero-letter
+                style={{
+                  display: "inline-block",
+                  fontFamily: "'Instrument Serif', Georgia, serif",
+                  fontWeight: 400,
+                  fontSize: "clamp(2.8rem, 5.8vw, 5.2rem)",
+                  letterSpacing: "0.08em",
+                  color: "#ffffff",
+                  textShadow:
+                    "0 4px 20px rgba(0,0,0,0.9), 0 0 35px rgba(237, 76, 0, 0.6), 0 0 65px rgba(237, 76, 0, 0.3)",
+                  userSelect: "none",
+                  willChange: "transform, opacity, filter",
+                }}
+              >
+                {hl.char}
+              </span>
+            ))}
           </div>
 
-          {/* Accent Rim Highlight */}
           <div
+            data-assembled-sub
             style={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "28px",
-              border: "1px solid rgba(237, 76, 0, 0.25)",
-              pointerEvents: "none",
+              marginTop: "16px",
+              fontFamily: "monospace",
+              fontSize: "12px",
+              letterSpacing: "0.38em",
+              textTransform: "uppercase",
+              color: "rgba(255, 255, 255, 0.75)",
+              textAlign: "center",
+              willChange: "transform, opacity",
             }}
-          />
+          >
+            SOVEREIGN BENCH
+          </div>
         </div>
       </div>
 
-      {/* ── LEFT FLANK: ARC SERVICES (Bottom to Top) ── */}
-      {/* Anchored to outer left flank, guaranteed 360px width, never squished */}
+      {/* ── FLANK SERVICES (ALWAYS ENTER FROM LEFT & RIGHT, NO FADE-IN!) ── */}
       <div
         style={{
           position: "absolute",
-          left: "5vw",
-          top: "50%",
-          width: "360px",
-          height: "100%",
+          inset: 0,
           pointerEvents: "none",
-          zIndex: 20,
+          zIndex: 25,
         }}
       >
-        {leftServices.map((svc) => (
-          <div
-            key={svc.id}
-            data-stream-left
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              width: "100%",
-              willChange: "transform",
-              pointerEvents: "auto",
-            }}
-          >
-            {/* Compact Square Glassmorphism Card (matching media_1794551883246_21ebec83.jpg) */}
+        {/* LEFT FLANK: Arc Services (Entering from Left, Flowing Bottom to Top) */}
+        <div
+          style={{
+            position: "absolute",
+            left: "clamp(16px, 3.8vw, 54px)",
+            top: "50%",
+            width: "min(340px, calc(100vw - 32px))",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        >
+          {leftServices.map((svc) => (
             <div
+              key={svc.id}
+              data-stream-left
               style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
                 width: "100%",
-                background: "rgba(255, 255, 255, 0.04)",
-                backdropFilter: "blur(24px)",
-                WebkitBackdropFilter: "blur(24px)",
-                border: "1px solid rgba(255, 255, 255, 0.12)",
-                borderRadius: "20px",
-                padding: "26px 28px",
-                boxShadow: "0 25px 60px rgba(0, 0, 0, 0.75)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                minHeight: "180px",
+                willChange: "transform",
+                pointerEvents: "auto",
               }}
             >
-              {/* Header: Title + Geometric Line Icon */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16px" }}>
-                <h3
-                  style={{
-                    fontFamily: "system-ui, -apple-system, sans-serif",
-                    fontSize: "1.35rem",
-                    fontWeight: 700,
-                    color: "#ffffff",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.25,
-                    margin: 0,
-                  }}
-                >
-                  {svc.title}
-                </h3>
-                <div style={{ flexShrink: 0 }}>
-                  <ServiceIcon type={svc.iconType} />
-                </div>
-              </div>
-
-              {/* Minimalist 2-line Description */}
-              <p
+              {/* Compact Square Glassmorphism Card (matching media_1794551883246_21ebec83.jpg) */}
+              <div
                 style={{
-                  marginTop: "16px",
-                  fontSize: "0.85rem",
-                  lineHeight: 1.6,
-                  color: "rgba(255, 255, 255, 0.7)",
-                  margin: "16px 0 0 0",
+                  width: "100%",
+                  background: "rgba(255, 255, 255, 0.045)",
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  borderRadius: "20px",
+                  padding: "24px 26px",
+                  boxShadow: "0 25px 60px rgba(0, 0, 0, 0.75)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  minHeight: "175px",
                 }}
               >
-                {svc.description}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+                {/* Header: Title + Geometric Line Icon */}
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "14px" }}>
+                  <h3
+                    style={{
+                      fontFamily: "system-ui, -apple-system, sans-serif",
+                      fontSize: "1.25rem",
+                      fontWeight: 700,
+                      color: "#ffffff",
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1.25,
+                      margin: 0,
+                    }}
+                  >
+                    {svc.title}
+                  </h3>
+                  <div style={{ flexShrink: 0 }}>
+                    <ServiceIcon type={svc.iconType} />
+                  </div>
+                </div>
 
-      {/* ── RIGHT FLANK: ARC SERVICES (Top to Bottom) ── */}
-      {/* Anchored to outer right flank, guaranteed 360px width, never squished */}
-      <div
-        style={{
-          position: "absolute",
-          right: "5vw",
-          top: "50%",
-          width: "360px",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: 20,
-        }}
-      >
-        {rightServices.map((svc) => (
-          <div
-            key={svc.id}
-            data-stream-right
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              width: "100%",
-              willChange: "transform",
-              pointerEvents: "auto",
-            }}
-          >
-            {/* Compact Square Glassmorphism Card (matching media_1794551883246_21ebec83.jpg) */}
+                {/* Minimalist 2-line Description */}
+                <p
+                  style={{
+                    marginTop: "14px",
+                    fontSize: "0.85rem",
+                    lineHeight: 1.55,
+                    color: "rgba(255, 255, 255, 0.7)",
+                    margin: "14px 0 0 0",
+                  }}
+                >
+                  {svc.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT FLANK: Arc Services (Entering from Right, Flowing Top to Bottom) */}
+        <div
+          style={{
+            position: "absolute",
+            right: "clamp(16px, 3.8vw, 54px)",
+            top: "50%",
+            width: "min(340px, calc(100vw - 32px))",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        >
+          {rightServices.map((svc) => (
             <div
+              key={svc.id}
+              data-stream-right
               style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
                 width: "100%",
-                background: "rgba(255, 255, 255, 0.04)",
-                backdropFilter: "blur(24px)",
-                WebkitBackdropFilter: "blur(24px)",
-                border: "1px solid rgba(255, 255, 255, 0.12)",
-                borderRadius: "20px",
-                padding: "26px 28px",
-                boxShadow: "0 25px 60px rgba(0, 0, 0, 0.75)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                minHeight: "180px",
+                willChange: "transform",
+                pointerEvents: "auto",
               }}
             >
-              {/* Header: Title + Geometric Line Icon */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16px" }}>
-                <h3
-                  style={{
-                    fontFamily: "system-ui, -apple-system, sans-serif",
-                    fontSize: "1.35rem",
-                    fontWeight: 700,
-                    color: "#ffffff",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.25,
-                    margin: 0,
-                  }}
-                >
-                  {svc.title}
-                </h3>
-                <div style={{ flexShrink: 0 }}>
-                  <ServiceIcon type={svc.iconType} />
-                </div>
-              </div>
-
-              {/* Minimalist 2-line Description */}
-              <p
+              {/* Compact Square Glassmorphism Card (matching media_1794551883246_21ebec83.jpg) */}
+              <div
                 style={{
-                  marginTop: "16px",
-                  fontSize: "0.85rem",
-                  lineHeight: 1.6,
-                  color: "rgba(255, 255, 255, 0.7)",
-                  margin: "16px 0 0 0",
+                  width: "100%",
+                  background: "rgba(255, 255, 255, 0.045)",
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  borderRadius: "20px",
+                  padding: "24px 26px",
+                  boxShadow: "0 25px 60px rgba(0, 0, 0, 0.75)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  minHeight: "175px",
                 }}
               >
-                {svc.description}
-              </p>
+                {/* Header: Title + Geometric Line Icon */}
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "14px" }}>
+                  <h3
+                    style={{
+                      fontFamily: "system-ui, -apple-system, sans-serif",
+                      fontSize: "1.25rem",
+                      fontWeight: 700,
+                      color: "#ffffff",
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1.25,
+                      margin: 0,
+                    }}
+                  >
+                    {svc.title}
+                  </h3>
+                  <div style={{ flexShrink: 0 }}>
+                    <ServiceIcon type={svc.iconType} />
+                  </div>
+                </div>
+
+                {/* Minimalist 2-line Description */}
+                <p
+                  style={{
+                    marginTop: "14px",
+                    fontSize: "0.85rem",
+                    lineHeight: 1.55,
+                    color: "rgba(255, 255, 255, 0.7)",
+                    margin: "14px 0 0 0",
+                  }}
+                >
+                  {svc.description}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* ── FOOTER SUB-INDICATOR ── */}
@@ -827,7 +955,7 @@ export default function ArcServices() {
         </span>
       </div>
 
-      {/* ── SMOOTH BREAKING TRANSITION BLINDS (Screenshot 4) ── */}
+      {/* ── STAGE 4: SMOOTH BREAKING TRANSITION BLINDS (Screenshot 4) ── */}
       <div
         data-trionn-blinds-wrap
         style={{
@@ -912,7 +1040,7 @@ export default function ArcServices() {
 
           <h2
             style={{
-              fontFamily: "Georgia, serif",
+              fontFamily: "'Instrument Serif', Georgia, serif",
               fontSize: "clamp(2.5rem, 5vw, 4.5rem)",
               fontWeight: 400,
               color: "#020035",
