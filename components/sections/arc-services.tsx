@@ -266,9 +266,11 @@ export default function ArcServices() {
       // ─────────────────────────────────────────────────────────────────────────────
       // DESKTOP & TABLET (>= 768px):
       // 1. Letters cascade from Top to Bottom into TAZRIEL
-      // 2. Both Left & Right cards enter from Top and scroll down along the arc into position
+      // 2. OPPOSITE DIRECTION FLOW:
+      //    - Left flank: Enters from BOTTOM (+75vh) and scrolls UP to exit at top (-75vh)
+      //    - Right flank: Enters from TOP (-75vh) and scrolls DOWN to exit at bottom (+75vh)
       // 3. Left cards cover ONLY 'T' | Right cards cover ONLY 'L' (z-index: 30, above TAZRIEL)
-      // 4. Slow, continuous card transitions as you scroll down
+      // 4. Slow, continuous counter-orbital card transitions
       // ─────────────────────────────────────────────────────────────────────────────
       mm.add("(min-width: 768px)", () => {
         // Master Timeline (end: "+=6000", scrub: 1.5)
@@ -345,21 +347,23 @@ export default function ArcServices() {
         );
 
         // ─────────────────────────────────────────────────────────────────────────
-        // STAGE 2: CARDS ENTER FROM TOP AND SCROLL DOWN ALONG ARC
-        // Left cards: enter from top-left (y: -75vh, x: -60px) -> center (y: 0, x: 0 covering 'T') -> exit bottom (y: 75vh, x: -60px)
-        // Right cards: enter from top-right (y: -75vh, x: 60px) -> center (y: 0, x: 0 covering 'L') -> exit bottom (y: 75vh, x: 60px)
+        // STAGE 2: OPPOSITE DIRECTION COUNTER-ORBITAL FLOW
+        // - Left flank: Enters from BOTTOM (+75vh, x: -60px) -> Center (y: 0, x: 0 covering 'T') -> Exits TOP (-75vh, x: -60px)
+        // - Right flank: Enters from TOP (-75vh, x: 60px) -> Center (y: 0, x: 0 covering 'L') -> Exits BOTTOM (+75vh, x: 60px)
         // ─────────────────────────────────────────────────────────────────────────
 
-        // Initial setup: all cards start above screen (y: -75vh) with opacity 0
+        // Initial setup:
+        // Left cards start BELOW the screen (y: +75vh)
         leftCardEls.forEach((card) => {
-          gsap.set(card, { x: -60, y: "-75vh", yPercent: -50, rotation: -5, opacity: 0 });
+          gsap.set(card, { x: -60, y: "75vh", yPercent: -50, rotation: -5, opacity: 0 });
         });
+        // Right cards start ABOVE the screen (y: -75vh)
         rightCardEls.forEach((card) => {
           gsap.set(card, { x: 60, y: "-75vh", yPercent: -50, rotation: 5, opacity: 0 });
         });
 
-        // ── CARD 0 (AI on Left, Software on Right):
-        // Enters from top at 0.20 -> reaches sweet spot (y: 0) at 0.32 -> glides down to exit at 0.56
+        // ── CARD 0 (Left: UP from bottom | Right: DOWN from top):
+        // Enters at 0.20 -> reaches sweet spot (y: 0) at 0.32 -> glides toward exit at 0.58
         masterTl.to(
           leftCardEls[0],
           {
@@ -387,12 +391,13 @@ export default function ArcServices() {
           0.20,
         );
 
-        // Card 0 glides down toward exit as Card 1 approaches
+        // Card 0 glides toward exit as Card 1 approaches (Opposite directions!):
+        // Left Card 0 glides UP to -75vh
         masterTl.to(
           leftCardEls[0],
           {
             x: -60,
-            y: "75vh",
+            y: "-75vh",
             yPercent: -50,
             rotation: 5,
             opacity: 0,
@@ -401,6 +406,7 @@ export default function ArcServices() {
           },
           0.34,
         );
+        // Right Card 0 glides DOWN to +75vh
         masterTl.to(
           rightCardEls[0],
           {
@@ -415,8 +421,8 @@ export default function ArcServices() {
           0.34,
         );
 
-        // ── CARD 1 (M365 on Left, SaaS Support on Right):
-        // Enters from top at 0.34 -> reaches sweet spot (y: 0) at 0.54 -> glides down to exit at 0.78
+        // ── CARD 1 (Left: UP from bottom | Right: DOWN from top):
+        // Left Card 1 glides UP from +75vh to 0vh
         masterTl.to(
           leftCardEls[1],
           {
@@ -430,6 +436,7 @@ export default function ArcServices() {
           },
           0.34,
         );
+        // Right Card 1 glides DOWN from -75vh to 0vh
         masterTl.to(
           rightCardEls[1],
           {
@@ -444,12 +451,13 @@ export default function ArcServices() {
           0.34,
         );
 
-        // Card 1 glides down toward exit as Card 2 approaches
+        // Card 1 glides toward exit as Card 2 approaches (Opposite directions!):
+        // Left Card 1 glides UP to -75vh
         masterTl.to(
           leftCardEls[1],
           {
             x: -60,
-            y: "75vh",
+            y: "-75vh",
             yPercent: -50,
             rotation: 5,
             opacity: 0,
@@ -458,6 +466,7 @@ export default function ArcServices() {
           },
           0.58,
         );
+        // Right Card 1 glides DOWN to +75vh
         masterTl.to(
           rightCardEls[1],
           {
@@ -472,8 +481,8 @@ export default function ArcServices() {
           0.58,
         );
 
-        // ── CARD 2 (Stewardship on Left, Cvent on Right):
-        // Enters from top at 0.58 -> reaches sweet spot (y: 0) at 0.78 -> holds until 0.88 -> exits at 0.91
+        // ── CARD 2 (Left: UP from bottom | Right: DOWN from top):
+        // Left Card 2 glides UP from +75vh to 0vh
         masterTl.to(
           leftCardEls[2],
           {
@@ -487,6 +496,7 @@ export default function ArcServices() {
           },
           0.58,
         );
+        // Right Card 2 glides DOWN from -75vh to 0vh
         masterTl.to(
           rightCardEls[2],
           {
@@ -501,12 +511,13 @@ export default function ArcServices() {
           0.58,
         );
 
-        // Card 2 glides down toward exit before blinds transition
+        // Card 2 exits before blinds transition (Opposite directions!):
+        // Left Card 2 glides UP to -45vh
         masterTl.to(
           leftCardEls[2],
           {
             x: -50,
-            y: "45vh",
+            y: "-45vh",
             yPercent: -50,
             opacity: 0,
             duration: 0.10,
@@ -514,6 +525,7 @@ export default function ArcServices() {
           },
           0.82,
         );
+        // Right Card 2 glides DOWN to +45vh
         masterTl.to(
           rightCardEls[2],
           {
