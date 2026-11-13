@@ -6,9 +6,8 @@ import {
   ChapterMechanism,
   ChapterAnswer,
 } from "@/components/sections/chapters";
-import CommandTerminal from "@/components/sections/command-terminal";
-import SolarRadar from "@/components/sections/solar-radar";
-import ProofLedger from "@/components/sections/proof-ledger";
+import GlobalFootprint from "@/components/sections/global-footprint";
+import SolutionsHolder from "@/components/sections/solutions-holder";
 import BuildFutureCta from "@/components/sections/build-future-cta";
 import Process from "@/components/sections/process";
 import Recognition from "@/components/sections/recognition";
@@ -17,14 +16,17 @@ import ContactCta from "@/components/sections/contact-cta";
 /**
  * Tazriel Sovereign Digital Flagship — Homepage Architecture.
  *
- * Narrative Flow:
- * 01. Hero — The sovereign thesis & attention mandate.
- * 02. Chapters 01–04 — Layered physical sheet-over-sheet storytelling.
- * 03. Command Terminal — Pinned executive console replacing forced slide zooms.
- * 04. Solar Radar — Live dual-continent 24/5 handoff timeline (Addis Ababa + Skopje).
- * 05. Proof Ledger — Concrete comparative audit (Conventional BPO failure vs. Sovereign Bench).
- * 06. Build Your Future — Full-width architectural command atrium and consultation booking.
- * 07. Delivery Process, Credentials & Direct Engagement.
+ * Narrative Flow (InterGest Canada & Swiss Editorial Luxury):
+ * 01. Hero — Sovereign thesis & non-fungible attention mandate.
+ * 02. Chapters 01–04 — Tactile sheet-over-sheet sticky parallax storytelling.
+ * 03. GlobalFootprint — Architectural network ledger (Addis Ababa + Skopje + Springfield).
+ * 04. SolutionsHolder — The cinematic zoom-in portal, 5 horizontal discipline slides,
+ *     and the zoom-out reveal with "WE SOLVE WHAT STANDS IN YOUR WAY" in background.
+ * 05. BuildFutureCta — Intergest Canada cta_wrap u-zindex-1: Pinned static sentence
+ *     with architectural glass atrium globe plate zooming out on scroll.
+ * 06. Process & Delivery Governance.
+ * 07. Recognition & Institutional Credentials.
+ * 08. Sovereign Engagement Contact.
  */
 export default function Home() {
   return (
@@ -38,9 +40,8 @@ export default function Home() {
         <ChapterMechanism />
         <ChapterAnswer />
 
-        <CommandTerminal />
-        <SolarRadar />
-        <ProofLedger />
+        <GlobalFootprint />
+        <SolutionsHolder />
         <BuildFutureCta />
         <Process />
         <Recognition />

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import RevealBlock from "@/components/motion/reveal-block";
 import RevealText from "@/components/motion/reveal-text";
 
@@ -10,7 +9,7 @@ type Location = {
   role: string;
   tz: string;
   coords: string;
-  timeZoneId: string;
+  status: string;
   disciplines: string[];
   summary: string;
 };
@@ -20,9 +19,9 @@ const locations: Location[] = [
     city: "Springfield",
     country: "United States",
     role: "Global Headquarters",
-    tz: "CT (UTC-6 / UTC-5)",
+    tz: "CT (UTC-6)",
     coords: "39.7817° N, 89.6501° W",
-    timeZoneId: "America/Chicago",
+    status: "EXECUTIVE STEWARDSHIP",
     disciplines: ["Executive Leadership", "Client Strategy", "Account Governance"],
     summary:
       "Direct executive alignment, contract stewardship, and US operating hours oversight.",
@@ -33,7 +32,7 @@ const locations: Location[] = [
     role: "Primary Delivery Hub",
     tz: "EAT (UTC+3)",
     coords: "9.0320° N, 38.7482° E",
-    timeZoneId: "Africa/Addis_Ababa",
+    status: "PRIMARY PRODUCTION BENCH",
     disciplines: [
       "Software Development",
       "AI Data Annotation",
@@ -46,9 +45,9 @@ const locations: Location[] = [
     city: "Skopje",
     country: "North Macedonia",
     role: "European Delivery Hub",
-    tz: "CET (UTC+1 / UTC+2)",
+    tz: "CET (UTC+1)",
     coords: "41.9973° N, 21.4280° E",
-    timeZoneId: "Europe/Skopje",
+    status: "EMEA DELIVERY HUB",
     disciplines: [
       "Platform Operations",
       "Meetings & Events (Cvent)",
@@ -63,36 +62,10 @@ const locations: Location[] = [
  * Global Footprint & Operating Model.
  *
  * Inspired by InterGest Worldwide's architectural network ledger:
- * Replaces generic claims with concrete geographic infrastructure, live timezone telemetry,
+ * Replaces generic claims with concrete geographic infrastructure, institutional posture,
  * and clear division of operational responsibilities.
  */
 export default function GlobalFootprint() {
-  const [times, setTimes] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const updateClocks = () => {
-      const now = new Date();
-      const updated: Record<string, string> = {};
-      for (const loc of locations) {
-        try {
-          updated[loc.city] = new Intl.DateTimeFormat("en-US", {
-            timeZone: loc.timeZoneId,
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-          }).format(now);
-        } catch {
-          updated[loc.city] = "--:--:--";
-        }
-      }
-      setTimes(updated);
-    };
-
-    updateClocks();
-    const interval = setInterval(updateClocks, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <section
@@ -146,12 +119,12 @@ export default function GlobalFootprint() {
                     0{i + 1} // {loc.coords}
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="relative flex size-2">
+                    <span className="relative flex size-1.5">
                       <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-75" />
-                      <span className="relative inline-flex size-2 rounded-full bg-accent" />
+                      <span className="relative inline-flex size-1.5 rounded-full bg-accent" />
                     </span>
-                    <span className="font-mono text-xs font-semibold text-paper">
-                      {times[loc.city] || "LIVE"}
+                    <span className="font-mono text-micro uppercase tracking-wider text-accent font-semibold">
+                      {loc.status}
                     </span>
                   </div>
                 </div>
