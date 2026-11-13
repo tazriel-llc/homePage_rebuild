@@ -352,36 +352,6 @@ export function ChapterMechanism() {
 
 // ── 04. CHAPTER ANSWER ────────────────────────────────────────────────────────
 export function ChapterAnswer() {
-  const [eatTime, setEatTime] = useState("");
-  const [cetTime, setCetTime] = useState("");
-
-  useEffect(() => {
-    const update = () => {
-      const now = new Date();
-      setEatTime(
-        now.toLocaleTimeString("en-US", {
-          timeZone: "Africa/Addis_Ababa",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        }),
-      );
-      setCetTime(
-        now.toLocaleTimeString("en-US", {
-          timeZone: "Europe/Skopje",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        }),
-      );
-    };
-    update();
-    const interval = setInterval(update, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <Chapter
       index={4}
@@ -440,10 +410,10 @@ export function ChapterAnswer() {
                 Addis Ababa
               </h3>
               <div className="text-right">
-                <span className="font-mono text-2xl font-bold text-accent tracking-wider">
-                  {eatTime || "14:00:00"}
+                <span className="font-mono text-base font-semibold text-accent tracking-wider">
+                  EAT (UTC+3)
                 </span>
-                <span className="block font-mono text-[10px] text-muted">EAT UTC+3</span>
+                <span className="block font-mono text-[10px] text-muted">PRIMARY ENGINEERING CAMPUS</span>
               </div>
             </div>
             <ul className="mt-5 space-y-2 border-t border-line/40 pt-4 text-xs text-paper/85">
@@ -476,10 +446,10 @@ export function ChapterAnswer() {
                 Skopje
               </h3>
               <div className="text-right">
-                <span className="font-mono text-2xl font-bold text-accent tracking-wider">
-                  {cetTime || "12:00:00"}
+                <span className="font-mono text-base font-semibold text-accent tracking-wider">
+                  CET (UTC+1)
                 </span>
-                <span className="block font-mono text-[10px] text-muted">CET UTC+1</span>
+                <span className="block font-mono text-[10px] text-muted">EUROPEAN DELIVERY HUB</span>
               </div>
             </div>
             <ul className="mt-5 space-y-2 border-t border-line/40 pt-4 text-xs text-paper/85">
