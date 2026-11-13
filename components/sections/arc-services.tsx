@@ -13,7 +13,7 @@ type ServiceItem = {
   iconType: "waveform" | "rings" | "matrix" | "circuit" | "prism" | "diamond";
 };
 
-// 3 Left Services (Flow from Bottom to Top along Left Arc)
+// 3 Left Services (Cascade from Top to Bottom along Left Arc, covering 'T')
 const leftServices: ServiceItem[] = [
   {
     id: "ai-data",
@@ -44,7 +44,7 @@ const leftServices: ServiceItem[] = [
   },
 ];
 
-// 3 Right Services (Flow from Top to Bottom along Right Arc)
+// 3 Right Services (Cascade from Top to Bottom along Right Arc, covering 'L')
 const rightServices: ServiceItem[] = [
   {
     id: "software",
@@ -180,15 +180,16 @@ function ServiceIcon({ type }: { type: ServiceItem["iconType"] }) {
   }
 }
 
-// 7 Hero letters for TAZRIEL initial natural 3D vortex scatter coords
-const heroScatter = [
-  { char: "T", x: -360, y: 130, rot: -16, scale: 0.85, blur: 2 },
-  { char: "A", x: -150, y: -220, rot: 12, scale: 0.78, blur: 3 },
-  { char: "Z", x: -95, y: -95, rot: -10, scale: 0.72, blur: 2 },
-  { char: "R", x: 240, y: 160, rot: 18, scale: 0.88, blur: 3 },
-  { char: "I", x: 60, y: 170, rot: -8, scale: 0.75, blur: 2 },
-  { char: "E", x: 260, y: -140, rot: 14, scale: 0.82, blur: 3 },
-  { char: "L", x: 370, y: -50, rot: -12, scale: 0.86, blur: 2 },
+// 7 Hero letters for TAZRIEL descending from top to bottom (Request 2)
+// Each letter starts above center and cascades down smoothly into alignment
+const heroCascadeTop = [
+  { char: "T", initY: -320, initX: -25, rot: -10, scale: 0.82, blur: 2.5 },
+  { char: "A", initY: -250, initX: -12, rot: 8, scale: 0.85, blur: 2 },
+  { char: "Z", initY: -360, initX: -18, rot: -8, scale: 0.78, blur: 3 },
+  { char: "R", initY: -290, initX: 0, rot: 12, scale: 0.82, blur: 2.5 },
+  { char: "I", initY: -230, initX: 10, rot: -6, scale: 0.86, blur: 1.5 },
+  { char: "E", initY: -350, initX: 18, rot: 9, scale: 0.78, blur: 3 },
+  { char: "L", initY: -280, initX: 28, rot: -8, scale: 0.82, blur: 2 },
 ];
 
 // Ambient depth letters floating in cosmic background (Roman serif glyphs)
@@ -227,16 +228,16 @@ export default function ArcServices() {
       const blindsContainer = q("[data-trionn-blinds-wrap]");
       const outroText = q("[data-trionn-outro]");
 
-      // Initial state: 3D scattered letters
-      heroScatter.forEach((data, i) => {
+      // Initial state: letters start above center (cascading from top to bottom)
+      heroCascadeTop.forEach((data, i) => {
         const el = heroLetterEls[i];
         if (!el) return;
         gsap.set(el, {
-          x: data.x,
-          y: data.y,
+          x: data.initX,
+          y: data.initY,
           rotationZ: data.rot,
           scale: data.scale,
-          opacity: 0.8,
+          opacity: 0.75,
           filter: `blur(${data.blur}px)`,
         });
       });
@@ -249,12 +250,12 @@ export default function ArcServices() {
           y: data.y,
           rotationZ: data.rot,
           scale: data.scale,
-          opacity: 0.3,
+          opacity: 0.25,
           filter: `blur(${data.blur}px)`,
         });
       });
 
-      gsap.set(centerVortex, { opacity: 0.4, scale: 1 });
+      gsap.set(centerVortex, { opacity: 0.38, scale: 1 });
       gsap.set(blindsContainer, { pointerEvents: "none" });
       gsap.set(blinds, { scaleX: 0 });
       gsap.set(outroText, { opacity: 0, y: 30 });
@@ -263,9 +264,11 @@ export default function ArcServices() {
       const mm = gsap.matchMedia(root);
 
       // ─────────────────────────────────────────────────────────────────────────────
-      // DESKTOP & TABLET (>= 768px): Dual Counter-Orbital Arcs
-      // Left cards overlap ONLY 'T' | Right cards overlap ONLY 'L' | Placed ABOVE TAZRIEL
-      // Continuous 2-card flow as you scroll down
+      // DESKTOP & TABLET (>= 768px):
+      // 1. Letters cascade from Top to Bottom into TAZRIEL
+      // 2. Both Left & Right cards enter from Top and scroll down along the arc into position
+      // 3. Left cards cover ONLY 'T' | Right cards cover ONLY 'L' (z-index: 30, above TAZRIEL)
+      // 4. Slow, continuous card transitions as you scroll down
       // ─────────────────────────────────────────────────────────────────────────────
       mm.add("(min-width: 768px)", () => {
         // Master Timeline (end: "+=6000", scrub: 1.5)
@@ -281,8 +284,10 @@ export default function ArcServices() {
           },
         });
 
-        // 1. STAGE 1 (0.00 -> 0.22): Scattered letters swirl & assemble into TAZRIEL
-        heroScatter.forEach((_, i) => {
+        // ─────────────────────────────────────────────────────────────────────────
+        // STAGE 1 (0.00 -> 0.20): Letters cascade from Top to Bottom into TAZRIEL
+        // ─────────────────────────────────────────────────────────────────────────
+        heroCascadeTop.forEach((_, i) => {
           const el = heroLetterEls[i];
           if (!el) return;
           masterTl.to(
@@ -294,10 +299,10 @@ export default function ArcServices() {
               scale: 1,
               opacity: 1,
               filter: "blur(0px)",
-              duration: 0.20,
-              ease: "power3.inOut",
+              duration: 0.18,
+              ease: "power3.out",
             },
-            0.01,
+            0.01 + i * 0.008, // Staggered gentle cascade
           );
         });
 
@@ -307,13 +312,11 @@ export default function ArcServices() {
           masterTl.to(
             el,
             {
-              x: data.x * 0.25,
-              y: data.y * 0.25,
-              rotationZ: data.rot * 1.5,
-              opacity: 0.12,
-              filter: "blur(6px)",
+              y: data.y + 40,
+              rotationZ: data.rot * 1.3,
+              opacity: 0.15,
               duration: 0.18,
-              ease: "power2.inOut",
+              ease: "power2.out",
             },
             0.01,
           );
@@ -322,55 +325,98 @@ export default function ArcServices() {
         masterTl.to(
           centerVortex,
           {
-            rotation: 40,
-            scale: 1.12,
-            duration: 0.22,
+            rotation: 35,
+            scale: 1.1,
+            duration: 0.20,
             ease: "none",
           },
           0,
         );
 
-        // STAGE 2 (0.22 -> 0.90): TAZRIEL holds in center (NO disappearing)
+        // STAGE 2 (0.20 -> 0.90): TAZRIEL stays centered (anchored, breathing gently)
         masterTl.to(
           assembledWordmark,
           {
             scale: 1.03,
-            duration: 0.68,
+            duration: 0.70,
             ease: "none",
           },
-          0.22,
+          0.20,
         );
 
         // ─────────────────────────────────────────────────────────────────────────
-        // CONTINUOUS ARC STREAM (Left: Bottom to Top | Right: Top to Bottom)
-        // Card 0 starts in center. As you scroll, it glides out and Card 1 transitions in.
-        // As you scroll further, Card 1 glides out and Card 2 transitions in.
+        // STAGE 2: CARDS ENTER FROM TOP AND SCROLL DOWN ALONG ARC
+        // Left cards: enter from top-left (y: -75vh, x: -60px) -> center (y: 0, x: 0 covering 'T') -> exit bottom (y: 75vh, x: -60px)
+        // Right cards: enter from top-right (y: -75vh, x: 60px) -> center (y: 0, x: 0 covering 'L') -> exit bottom (y: 75vh, x: 60px)
         // ─────────────────────────────────────────────────────────────────────────
 
-        // LEFT FLANK (Bottom to Top along Left Arc)
-        // Left Card 0: in center (covering 'T') at 0.22 -> glides up to -55vh at 0.52
-        gsap.set(leftCardEls[0], { x: 0, y: "0vh", yPercent: -50, rotation: 0, opacity: 0 });
-        masterTl.to(
-          leftCardEls[0],
-          { opacity: 1, duration: 0.04, ease: "power2.out" },
-          0.22,
-        );
+        // Initial setup: all cards start above screen (y: -75vh) with opacity 0
+        leftCardEls.forEach((card) => {
+          gsap.set(card, { x: -60, y: "-75vh", yPercent: -50, rotation: -5, opacity: 0 });
+        });
+        rightCardEls.forEach((card) => {
+          gsap.set(card, { x: 60, y: "-75vh", yPercent: -50, rotation: 5, opacity: 0 });
+        });
+
+        // ── CARD 0 (AI on Left, Software on Right):
+        // Enters from top at 0.20 -> reaches sweet spot (y: 0) at 0.32 -> glides down to exit at 0.56
         masterTl.to(
           leftCardEls[0],
           {
-            x: -50,
-            y: "-55vh",
+            x: 0,
+            y: "0vh",
             yPercent: -50,
-            rotation: 3,
-            opacity: 0,
-            duration: 0.28,
-            ease: "power2.inOut",
+            rotation: 0,
+            opacity: 1,
+            duration: 0.12,
+            ease: "power2.out",
           },
-          0.26,
+          0.20,
+        );
+        masterTl.to(
+          rightCardEls[0],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.12,
+            ease: "power2.out",
+          },
+          0.20,
         );
 
-        // Left Card 1: glides up from +55vh to 0vh (covering 'T') at 0.54 -> then glides up to -55vh at 0.78
-        gsap.set(leftCardEls[1], { x: -50, y: "55vh", yPercent: -50, rotation: -3, opacity: 0 });
+        // Card 0 glides down toward exit as Card 1 approaches
+        masterTl.to(
+          leftCardEls[0],
+          {
+            x: -60,
+            y: "75vh",
+            yPercent: -50,
+            rotation: 5,
+            opacity: 0,
+            duration: 0.24,
+            ease: "power2.inOut",
+          },
+          0.34,
+        );
+        masterTl.to(
+          rightCardEls[0],
+          {
+            x: 60,
+            y: "75vh",
+            yPercent: -50,
+            rotation: -5,
+            opacity: 0,
+            duration: 0.24,
+            ease: "power2.inOut",
+          },
+          0.34,
+        );
+
+        // ── CARD 1 (M365 on Left, SaaS Support on Right):
+        // Enters from top at 0.34 -> reaches sweet spot (y: 0) at 0.54 -> glides down to exit at 0.78
         masterTl.to(
           leftCardEls[1],
           {
@@ -379,133 +425,111 @@ export default function ArcServices() {
             yPercent: -50,
             rotation: 0,
             opacity: 1,
-            duration: 0.26,
+            duration: 0.22,
             ease: "power2.inOut",
           },
-          0.28,
+          0.34,
         );
+        masterTl.to(
+          rightCardEls[1],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.22,
+            ease: "power2.inOut",
+          },
+          0.34,
+        );
+
+        // Card 1 glides down toward exit as Card 2 approaches
         masterTl.to(
           leftCardEls[1],
           {
+            x: -60,
+            y: "75vh",
+            yPercent: -50,
+            rotation: 5,
+            opacity: 0,
+            duration: 0.22,
+            ease: "power2.inOut",
+          },
+          0.58,
+        );
+        masterTl.to(
+          rightCardEls[1],
+          {
+            x: 60,
+            y: "75vh",
+            yPercent: -50,
+            rotation: -5,
+            opacity: 0,
+            duration: 0.22,
+            ease: "power2.inOut",
+          },
+          0.58,
+        );
+
+        // ── CARD 2 (Stewardship on Left, Cvent on Right):
+        // Enters from top at 0.58 -> reaches sweet spot (y: 0) at 0.78 -> holds until 0.88 -> exits at 0.91
+        masterTl.to(
+          leftCardEls[2],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.20,
+            ease: "power2.inOut",
+          },
+          0.58,
+        );
+        masterTl.to(
+          rightCardEls[2],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.20,
+            ease: "power2.inOut",
+          },
+          0.58,
+        );
+
+        // Card 2 glides down toward exit before blinds transition
+        masterTl.to(
+          leftCardEls[2],
+          {
             x: -50,
-            y: "-55vh",
-            yPercent: -50,
-            rotation: 3,
-            opacity: 0,
-            duration: 0.24,
-            ease: "power2.inOut",
-          },
-          0.54,
-        );
-
-        // Left Card 2: glides up from +55vh to 0vh (covering 'T') at 0.78 -> holds until 0.90
-        gsap.set(leftCardEls[2], { x: -50, y: "55vh", yPercent: -50, rotation: -3, opacity: 0 });
-        masterTl.to(
-          leftCardEls[2],
-          {
-            x: 0,
-            y: "0vh",
-            yPercent: -50,
-            rotation: 0,
-            opacity: 1,
-            duration: 0.24,
-            ease: "power2.inOut",
-          },
-          0.54,
-        );
-        masterTl.to(
-          leftCardEls[2],
-          {
-            x: -40,
-            y: "-35vh",
+            y: "45vh",
             yPercent: -50,
             opacity: 0,
-            duration: 0.12,
+            duration: 0.10,
             ease: "power2.in",
           },
-          0.78,
-        );
-
-        // RIGHT FLANK (Top to Bottom along Right Arc)
-        // Right Card 0: in center (covering 'L') at 0.22 -> glides down to +55vh at 0.52
-        gsap.set(rightCardEls[0], { x: 0, y: "0vh", yPercent: -50, rotation: 0, opacity: 0 });
-        masterTl.to(
-          rightCardEls[0],
-          { opacity: 1, duration: 0.04, ease: "power2.out" },
-          0.22,
-        );
-        masterTl.to(
-          rightCardEls[0],
-          {
-            x: 50,
-            y: "55vh",
-            yPercent: -50,
-            rotation: -3,
-            opacity: 0,
-            duration: 0.28,
-            ease: "power2.inOut",
-          },
-          0.26,
-        );
-
-        // Right Card 1: glides down from -55vh to 0vh (covering 'L') at 0.54 -> then glides down to +55vh at 0.78
-        gsap.set(rightCardEls[1], { x: 50, y: "-55vh", yPercent: -50, rotation: 3, opacity: 0 });
-        masterTl.to(
-          rightCardEls[1],
-          {
-            x: 0,
-            y: "0vh",
-            yPercent: -50,
-            rotation: 0,
-            opacity: 1,
-            duration: 0.26,
-            ease: "power2.inOut",
-          },
-          0.28,
-        );
-        masterTl.to(
-          rightCardEls[1],
-          {
-            x: 50,
-            y: "55vh",
-            yPercent: -50,
-            rotation: -3,
-            opacity: 0,
-            duration: 0.24,
-            ease: "power2.inOut",
-          },
-          0.54,
-        );
-
-        // Right Card 2: glides down from -55vh to 0vh (covering 'L') at 0.78 -> holds until 0.90
-        gsap.set(rightCardEls[2], { x: 50, y: "-55vh", yPercent: -50, rotation: 3, opacity: 0 });
-        masterTl.to(
-          rightCardEls[2],
-          {
-            x: 0,
-            y: "0vh",
-            yPercent: -50,
-            rotation: 0,
-            opacity: 1,
-            duration: 0.24,
-            ease: "power2.inOut",
-          },
-          0.54,
+          0.82,
         );
         masterTl.to(
           rightCardEls[2],
           {
-            x: 40,
-            y: "35vh",
+            x: 50,
+            y: "45vh",
             yPercent: -50,
             opacity: 0,
-            duration: 0.12,
+            duration: 0.10,
             ease: "power2.in",
           },
-          0.78,
+          0.82,
         );
 
+        // ─────────────────────────────────────────────────────────────────────────
         // STAGE 3 (0.91 -> 1.00): Smooth breaking paper transition
+        // ─────────────────────────────────────────────────────────────────────────
         masterTl.set(blindsContainer, { pointerEvents: "auto" }, 0.91);
 
         blinds.forEach((blind, idx) => {
@@ -546,7 +570,7 @@ export default function ArcServices() {
       });
 
       // ─────────────────────────────────────────────────────────────────────────────
-      // MOBILE (< 768px): TAZRIEL slightly elevated, Cards arc underneath
+      // MOBILE (< 768px): Letters cascade from top, Cards enter from top and scroll down
       // ─────────────────────────────────────────────────────────────────────────────
       mm.add("(max-width: 767px)", () => {
         const masterTl = gsap.timeline({
@@ -561,7 +585,8 @@ export default function ArcServices() {
           },
         });
 
-        heroScatter.forEach((_, i) => {
+        // Letters cascade from top
+        heroCascadeTop.forEach((_, i) => {
           const el = heroLetterEls[i];
           if (!el) return;
           masterTl.to(
@@ -573,30 +598,30 @@ export default function ArcServices() {
               scale: 1,
               opacity: 1,
               filter: "blur(0px)",
-              duration: 0.22,
-              ease: "power3.inOut",
+              duration: 0.20,
+              ease: "power3.out",
             },
-            0.01,
+            0.01 + i * 0.008,
           );
         });
 
-        // Mobile cards transition smoothly through lower viewport
+        // Mobile cards cascade from top to bottom through the lower viewport
         const allCards = [...leftCardEls, ...rightCardEls];
         allCards.forEach((card, idx) => {
-          gsap.set(card, { x: 0, y: "60vh", yPercent: -50, opacity: 0 });
-          const start = 0.24 + idx * 0.11;
+          gsap.set(card, { x: 0, y: "-60vh", yPercent: -50, opacity: 0 });
+          const start = 0.22 + idx * 0.11;
           const mid = start + 0.08;
           const end = mid + 0.08;
 
           masterTl.fromTo(
             card,
-            { y: "55vh", opacity: 0 },
+            { y: "-55vh", opacity: 0 },
             { y: "18vh", opacity: 1, duration: mid - start, ease: "power2.out" },
             start,
           );
           masterTl.to(
             card,
-            { y: "-15vh", opacity: 0, duration: end - mid, ease: "power2.in" },
+            { y: "75vh", opacity: 0, duration: end - mid, ease: "power2.in" },
             mid,
           );
         });
@@ -738,7 +763,7 @@ export default function ArcServices() {
             zIndex: 10,
           }}
         >
-          {heroScatter.map((hl, idx) => (
+          {heroCascadeTop.map((hl, idx) => (
             <span
               key={idx}
               data-hero-letter
@@ -770,11 +795,11 @@ export default function ArcServices() {
           zIndex: 30,
         }}
       >
-        {/* LEFT FLANK TRACK (Right edge covers ONLY 'T', flowing Bottom to Top) */}
+        {/* LEFT FLANK TRACK (Right edge covers ONLY 'T', cascading Top to Bottom along Arc) */}
         <div
           style={{
             position: "absolute",
-            right: "calc(50% + clamp(140px, 15.5vw + 25px, 260px))",
+            right: "calc(50% + clamp(130px, 15vw + 20px, 240px))",
             top: "50%",
             width: "min(340px, calc(100vw - 36px))",
             height: "100%",
@@ -874,11 +899,11 @@ export default function ArcServices() {
           ))}
         </div>
 
-        {/* RIGHT FLANK TRACK (Left edge covers ONLY 'L', flowing Top to Bottom) */}
+        {/* RIGHT FLANK TRACK (Left edge covers ONLY 'L', cascading Top to Bottom along Arc) */}
         <div
           style={{
             position: "absolute",
-            left: "calc(50% + clamp(140px, 15.5vw + 25px, 260px))",
+            left: "calc(50% + clamp(130px, 15vw + 20px, 240px))",
             top: "50%",
             width: "min(340px, calc(100vw - 36px))",
             height: "100%",
