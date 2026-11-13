@@ -13,8 +13,8 @@ type ServiceItem = {
   iconType: "waveform" | "rings" | "matrix" | "circuit" | "prism" | "diamond";
 };
 
-// 6 Disciplines shown 1-by-1 along counter-orbital arcs around TAZRIEL
-const allServices: ServiceItem[] = [
+// 3 Left Services (Flow from Bottom to Top along Left Arc)
+const leftServices: ServiceItem[] = [
   {
     id: "ai-data",
     index: "01",
@@ -23,15 +23,6 @@ const allServices: ServiceItem[] = [
     description:
       "High-accuracy labelled datasets, multi-turn RLHF evaluation, and model training pipelines held to verified mathematical agreement thresholds.",
     iconType: "waveform",
-  },
-  {
-    id: "software",
-    index: "02",
-    tag: "SOFTWARE ARCHITECTURE",
-    title: "Software & Mendix Architecture",
-    description:
-      "Certified Mendix Rapid & Advanced practitioners shipping full-stack enterprise systems directly into your repositories and daily sprint rituals.",
-    iconType: "rings",
   },
   {
     id: "m365",
@@ -43,15 +34,6 @@ const allServices: ServiceItem[] = [
     iconType: "matrix",
   },
   {
-    id: "support",
-    index: "04",
-    tag: "TECHNICAL OPERATIONS",
-    title: "SaaS Product Support & Helpdesk",
-    description:
-      "Tier-3 technical support teams that master your platform deeply enough to resolve root causes rather than deflect scripts. Real engineers staffing queues.",
-    iconType: "circuit",
-  },
-  {
     id: "stewardship",
     index: "05",
     tag: "EXECUTIVE ALIGNMENT",
@@ -59,6 +41,28 @@ const allServices: ServiceItem[] = [
     description:
       "Direct executive alignment, SLA accountability, and dual-continent delivery architecture ensuring your engineering rituals run with zero dropped threads.",
     iconType: "prism",
+  },
+];
+
+// 3 Right Services (Flow from Top to Bottom along Right Arc)
+const rightServices: ServiceItem[] = [
+  {
+    id: "software",
+    index: "02",
+    tag: "SOFTWARE ARCHITECTURE",
+    title: "Software & Mendix Architecture",
+    description:
+      "Certified Mendix Rapid & Advanced practitioners shipping full-stack enterprise systems directly into your repositories and daily sprint rituals.",
+    iconType: "rings",
+  },
+  {
+    id: "support",
+    index: "04",
+    tag: "TECHNICAL OPERATIONS",
+    title: "SaaS Product Support & Helpdesk",
+    description:
+      "Tier-3 technical support teams that master your platform deeply enough to resolve root causes rather than deflect scripts. Real engineers staffing queues.",
+    iconType: "circuit",
   },
   {
     id: "cvent",
@@ -216,9 +220,9 @@ export default function ArcServices() {
       const heroLetterEls = q("[data-hero-letter]");
       const depthLetterEls = q("[data-depth-letter]");
       const assembledWordmark = q("[data-assembled-wordmark]");
-      const orangeGlow = q("[data-orange-glow]");
       const centerVortex = q("[data-center-vortex]");
-      const cardEls = q("[data-orbit-card]");
+      const leftCardEls = q("[data-left-card]");
+      const rightCardEls = q("[data-right-card]");
       const blinds = q("[data-trionn-blind]");
       const blindsContainer = q("[data-trionn-blinds-wrap]");
       const outroText = q("[data-trionn-outro]");
@@ -250,8 +254,7 @@ export default function ArcServices() {
         });
       });
 
-      gsap.set(orangeGlow, { opacity: 0.2, scale: 0.7 });
-      gsap.set(centerVortex, { opacity: 0.45, scale: 1 });
+      gsap.set(centerVortex, { opacity: 0.4, scale: 1 });
       gsap.set(blindsContainer, { pointerEvents: "none" });
       gsap.set(blinds, { scaleX: 0 });
       gsap.set(outroText, { opacity: 0, y: 30 });
@@ -260,25 +263,12 @@ export default function ArcServices() {
       const mm = gsap.matchMedia(root);
 
       // ─────────────────────────────────────────────────────────────────────────────
-      // DESKTOP & TABLET (>= 768px): TAZRIEL centered, Cards 1-by-1 in Close Arcs
+      // DESKTOP & TABLET (>= 768px): Dual Counter-Orbital Arcs
+      // Left cards overlap ONLY 'T' | Right cards overlap ONLY 'L' | Placed ABOVE TAZRIEL
+      // Continuous 2-card flow as you scroll down
       // ─────────────────────────────────────────────────────────────────────────────
       mm.add("(min-width: 768px)", () => {
-        // Initial setup for cards: hide offscreen
-        // Left cards: index 0, 2, 4 (start offscreen bottom-left)
-        // Right cards: index 1, 3, 5 (start offscreen top-right)
-        cardEls.forEach((card, idx) => {
-          const isLeft = idx % 2 === 0;
-          gsap.set(card, {
-            x: isLeft ? -160 : 160,
-            y: isLeft ? "70vh" : "-70vh",
-            yPercent: -50,
-            rotation: isLeft ? -10 : 10,
-            opacity: 0,
-            scale: 0.9,
-            pointerEvents: "none",
-          });
-        });
-
+        // Master Timeline (end: "+=6000", scrub: 1.5)
         const masterTl = gsap.timeline({
           scrollTrigger: {
             trigger: container,
@@ -291,7 +281,7 @@ export default function ArcServices() {
           },
         });
 
-        // 1. STAGE 1 (0.00 -> 0.22): Scattered letters swirl and assemble into TAZRIEL
+        // 1. STAGE 1 (0.00 -> 0.22): Scattered letters swirl & assemble into TAZRIEL
         heroScatter.forEach((_, i) => {
           const el = heroLetterEls[i];
           if (!el) return;
@@ -307,7 +297,7 @@ export default function ArcServices() {
               duration: 0.20,
               ease: "power3.inOut",
             },
-            0.02,
+            0.01,
           );
         });
 
@@ -325,117 +315,198 @@ export default function ArcServices() {
               duration: 0.18,
               ease: "power2.inOut",
             },
-            0.02,
+            0.01,
           );
         });
 
         masterTl.to(
           centerVortex,
           {
-            rotation: 45,
-            scale: 1.15,
+            rotation: 40,
+            scale: 1.12,
             duration: 0.22,
             ease: "none",
           },
           0,
         );
 
-        masterTl.to(
-          orangeGlow,
-          {
-            opacity: 0.95,
-            scale: 1.45,
-            duration: 0.10,
-            ease: "power2.out",
-          },
-          0.16,
-        );
-
-        // STAGE 2 (0.22 -> 0.88): TAZRIEL stays in center + Cards orbit 1 by 1
-        // TAZRIEL subtle breathing
+        // STAGE 2 (0.22 -> 0.90): TAZRIEL holds in center (NO disappearing)
         masterTl.to(
           assembledWordmark,
           {
-            scale: 1.04,
-            duration: 0.65,
+            scale: 1.03,
+            duration: 0.68,
             ease: "none",
           },
           0.22,
         );
 
+        // ─────────────────────────────────────────────────────────────────────────
+        // CONTINUOUS ARC STREAM (Left: Bottom to Top | Right: Top to Bottom)
+        // Card 0 starts in center. As you scroll, it glides out and Card 1 transitions in.
+        // As you scroll further, Card 1 glides out and Card 2 transitions in.
+        // ─────────────────────────────────────────────────────────────────────────
+
+        // LEFT FLANK (Bottom to Top along Left Arc)
+        // Left Card 0: in center (covering 'T') at 0.22 -> glides up to -55vh at 0.52
+        gsap.set(leftCardEls[0], { x: 0, y: "0vh", yPercent: -50, rotation: 0, opacity: 0 });
         masterTl.to(
-          orangeGlow,
-          {
-            scale: 1.55,
-            opacity: 1,
-            duration: 0.65,
-            ease: "none",
-          },
+          leftCardEls[0],
+          { opacity: 1, duration: 0.04, ease: "power2.out" },
           0.22,
         );
+        masterTl.to(
+          leftCardEls[0],
+          {
+            x: -50,
+            y: "-55vh",
+            yPercent: -50,
+            rotation: 3,
+            opacity: 0,
+            duration: 0.28,
+            ease: "power2.inOut",
+          },
+          0.26,
+        );
 
-        // 6 CARDS IN 1-BY-1 SEQUENTIAL ARC FLOW (Close to TAZRIEL, Alternating Left & Right)
-        // Each card has a ~0.15 normalized window: Enters along arc -> Focus close to TAZRIEL -> Exits along arc
-        const cardTimes = [
-          { start: 0.22, mid: 0.31, end: 0.40 }, // Card 0: AI & Automation (Left)
-          { start: 0.33, mid: 0.42, end: 0.51 }, // Card 1: Software & Mendix (Right)
-          { start: 0.44, mid: 0.53, end: 0.62 }, // Card 2: Microsoft 365 (Left)
-          { start: 0.55, mid: 0.64, end: 0.73 }, // Card 3: SaaS Support (Right)
-          { start: 0.66, mid: 0.75, end: 0.84 }, // Card 4: Strategic Stewardship (Left)
-          { start: 0.77, mid: 0.85, end: 0.92 }, // Card 5: Cvent Events (Right)
-        ];
+        // Left Card 1: glides up from +55vh to 0vh (covering 'T') at 0.54 -> then glides up to -55vh at 0.78
+        gsap.set(leftCardEls[1], { x: -50, y: "55vh", yPercent: -50, rotation: -3, opacity: 0 });
+        masterTl.to(
+          leftCardEls[1],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.26,
+            ease: "power2.inOut",
+          },
+          0.28,
+        );
+        masterTl.to(
+          leftCardEls[1],
+          {
+            x: -50,
+            y: "-55vh",
+            yPercent: -50,
+            rotation: 3,
+            opacity: 0,
+            duration: 0.24,
+            ease: "power2.inOut",
+          },
+          0.54,
+        );
 
-        cardEls.forEach((card, idx) => {
-          const timing = cardTimes[idx];
-          if (!timing) return;
-          const isLeft = idx % 2 === 0;
+        // Left Card 2: glides up from +55vh to 0vh (covering 'T') at 0.78 -> holds until 0.90
+        gsap.set(leftCardEls[2], { x: -50, y: "55vh", yPercent: -50, rotation: -3, opacity: 0 });
+        masterTl.to(
+          leftCardEls[2],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.24,
+            ease: "power2.inOut",
+          },
+          0.54,
+        );
+        masterTl.to(
+          leftCardEls[2],
+          {
+            x: -40,
+            y: "-35vh",
+            yPercent: -50,
+            opacity: 0,
+            duration: 0.12,
+            ease: "power2.in",
+          },
+          0.78,
+        );
 
-          // Phase A: Glide inward along the arc towards TAZRIEL (Entrance)
-          masterTl.fromTo(
-            card,
-            {
-              x: isLeft ? -160 : 160,
-              y: isLeft ? "65vh" : "-65vh",
-              yPercent: -50,
-              rotation: isLeft ? -10 : 10,
-              opacity: 0,
-              scale: 0.92,
-              pointerEvents: "none",
-            },
-            {
-              x: 0, // Brought close to TAZRIEL!
-              y: "0vh", // Dead center on its flank
-              yPercent: -50,
-              rotation: 0,
-              opacity: 1,
-              scale: 1,
-              pointerEvents: "auto",
-              duration: timing.mid - timing.start,
-              ease: "power2.out",
-            },
-            timing.start,
-          );
+        // RIGHT FLANK (Top to Bottom along Right Arc)
+        // Right Card 0: in center (covering 'L') at 0.22 -> glides down to +55vh at 0.52
+        gsap.set(rightCardEls[0], { x: 0, y: "0vh", yPercent: -50, rotation: 0, opacity: 0 });
+        masterTl.to(
+          rightCardEls[0],
+          { opacity: 1, duration: 0.04, ease: "power2.out" },
+          0.22,
+        );
+        masterTl.to(
+          rightCardEls[0],
+          {
+            x: 50,
+            y: "55vh",
+            yPercent: -50,
+            rotation: -3,
+            opacity: 0,
+            duration: 0.28,
+            ease: "power2.inOut",
+          },
+          0.26,
+        );
 
-          // Phase B: Glide outward along the arc to exit (Exit)
-          masterTl.to(
-            card,
-            {
-              x: isLeft ? -140 : 140,
-              y: isLeft ? "-65vh" : "65vh",
-              yPercent: -50,
-              rotation: isLeft ? 10 : -10,
-              opacity: 0,
-              scale: 0.92,
-              pointerEvents: "none",
-              duration: timing.end - timing.mid,
-              ease: "power2.in",
-            },
-            timing.mid,
-          );
-        });
+        // Right Card 1: glides down from -55vh to 0vh (covering 'L') at 0.54 -> then glides down to +55vh at 0.78
+        gsap.set(rightCardEls[1], { x: 50, y: "-55vh", yPercent: -50, rotation: 3, opacity: 0 });
+        masterTl.to(
+          rightCardEls[1],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.26,
+            ease: "power2.inOut",
+          },
+          0.28,
+        );
+        masterTl.to(
+          rightCardEls[1],
+          {
+            x: 50,
+            y: "55vh",
+            yPercent: -50,
+            rotation: -3,
+            opacity: 0,
+            duration: 0.24,
+            ease: "power2.inOut",
+          },
+          0.54,
+        );
 
-        // STAGE 3 (0.92 -> 1.00): Smooth breaking paper transition
-        masterTl.set(blindsContainer, { pointerEvents: "auto" }, 0.92);
+        // Right Card 2: glides down from -55vh to 0vh (covering 'L') at 0.78 -> holds until 0.90
+        gsap.set(rightCardEls[2], { x: 50, y: "-55vh", yPercent: -50, rotation: 3, opacity: 0 });
+        masterTl.to(
+          rightCardEls[2],
+          {
+            x: 0,
+            y: "0vh",
+            yPercent: -50,
+            rotation: 0,
+            opacity: 1,
+            duration: 0.24,
+            ease: "power2.inOut",
+          },
+          0.54,
+        );
+        masterTl.to(
+          rightCardEls[2],
+          {
+            x: 40,
+            y: "35vh",
+            yPercent: -50,
+            opacity: 0,
+            duration: 0.12,
+            ease: "power2.in",
+          },
+          0.78,
+        );
+
+        // STAGE 3 (0.91 -> 1.00): Smooth breaking paper transition
+        masterTl.set(blindsContainer, { pointerEvents: "auto" }, 0.91);
 
         blinds.forEach((blind, idx) => {
           const fromLeft = idx % 2 === 0;
@@ -448,7 +519,7 @@ export default function ArcServices() {
               duration: 0.04,
               ease: "power3.inOut",
             },
-            0.92 + idx * 0.015,
+            0.91 + idx * 0.015,
           );
         });
 
@@ -475,20 +546,9 @@ export default function ArcServices() {
       });
 
       // ─────────────────────────────────────────────────────────────────────────────
-      // MOBILE (< 768px): TAZRIEL elevated, Cards 1-by-1 in arc underneath
+      // MOBILE (< 768px): TAZRIEL slightly elevated, Cards arc underneath
       // ─────────────────────────────────────────────────────────────────────────────
       mm.add("(max-width: 767px)", () => {
-        cardEls.forEach((card) => {
-          gsap.set(card, {
-            x: 0,
-            y: "65vh",
-            yPercent: -50,
-            opacity: 0,
-            scale: 0.9,
-            pointerEvents: "none",
-          });
-        });
-
         const masterTl = gsap.timeline({
           scrollTrigger: {
             trigger: container,
@@ -501,7 +561,6 @@ export default function ArcServices() {
           },
         });
 
-        // 1. Letters assemble
         heroScatter.forEach((_, i) => {
           const el = heroLetterEls[i];
           if (!el) return;
@@ -517,75 +576,31 @@ export default function ArcServices() {
               duration: 0.22,
               ease: "power3.inOut",
             },
-            0.02,
+            0.01,
           );
         });
 
-        masterTl.to(
-          orangeGlow,
-          {
-            opacity: 0.9,
-            scale: 1.3,
-            duration: 0.12,
-            ease: "power2.out",
-          },
-          0.16,
-        );
-
-        // 2. Mobile 1-by-1 card arc underneath TAZRIEL
-        const mobileTimes = [
-          { start: 0.24, mid: 0.33, end: 0.42 },
-          { start: 0.35, mid: 0.44, end: 0.53 },
-          { start: 0.46, mid: 0.55, end: 0.64 },
-          { start: 0.57, mid: 0.66, end: 0.75 },
-          { start: 0.68, mid: 0.77, end: 0.86 },
-          { start: 0.79, mid: 0.87, end: 0.93 },
-        ];
-
-        cardEls.forEach((card, idx) => {
-          const timing = mobileTimes[idx];
-          if (!timing) return;
+        // Mobile cards transition smoothly through lower viewport
+        const allCards = [...leftCardEls, ...rightCardEls];
+        allCards.forEach((card, idx) => {
+          gsap.set(card, { x: 0, y: "60vh", yPercent: -50, opacity: 0 });
+          const start = 0.24 + idx * 0.11;
+          const mid = start + 0.08;
+          const end = mid + 0.08;
 
           masterTl.fromTo(
             card,
-            {
-              x: idx % 2 === 0 ? -60 : 60,
-              y: "55vh",
-              yPercent: -50,
-              opacity: 0,
-              scale: 0.92,
-              pointerEvents: "none",
-            },
-            {
-              x: 0,
-              y: "18vh", // Centered under TAZRIEL
-              yPercent: -50,
-              opacity: 1,
-              scale: 1,
-              pointerEvents: "auto",
-              duration: timing.mid - timing.start,
-              ease: "power2.out",
-            },
-            timing.start,
+            { y: "55vh", opacity: 0 },
+            { y: "18vh", opacity: 1, duration: mid - start, ease: "power2.out" },
+            start,
           );
-
           masterTl.to(
             card,
-            {
-              x: idx % 2 === 0 ? 60 : -60,
-              y: "-10vh",
-              yPercent: -50,
-              opacity: 0,
-              scale: 0.92,
-              pointerEvents: "none",
-              duration: timing.end - timing.mid,
-              ease: "power2.in",
-            },
-            timing.mid,
+            { y: "-15vh", opacity: 0, duration: end - mid, ease: "power2.in" },
+            mid,
           );
         });
 
-        // Transition blinds on mobile
         masterTl.set(blindsContainer, { pointerEvents: "auto" }, 0.93);
         blinds.forEach((blind, idx) => {
           masterTl.to(
@@ -643,25 +658,7 @@ export default function ArcServices() {
         }}
       />
 
-      {/* ── AMBIENT COSMIC DEPTH BLOOMS ── */}
-      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "60vw",
-            height: "60vw",
-            borderRadius: "50%",
-            opacity: 0.28,
-            filter: "blur(140px)",
-            background: "radial-gradient(circle, #2100b1 0%, transparent 70%)",
-          }}
-        />
-      </div>
-
-      {/* ── CENTER VORTEX VISUAL (Single Centered Graphic, Never Tiled) ── */}
+      {/* ── CENTER VORTEX VISUAL (Pure clean cosmic graphic, no colored gradient halo) ── */}
       <div
         data-center-vortex
         style={{
@@ -669,17 +666,17 @@ export default function ArcServices() {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
-          width: "620px",
-          height: "620px",
-          maxWidth: "90vw",
-          maxHeight: "90vw",
+          width: "600px",
+          height: "600px",
+          maxWidth: "88vw",
+          maxHeight: "88vw",
           pointerEvents: "none",
           zIndex: 5,
           borderRadius: "50%",
           overflow: "hidden",
           mixBlendMode: "screen",
-          maskImage: "radial-gradient(circle, black 38%, transparent 72%)",
-          WebkitMaskImage: "radial-gradient(circle, black 38%, transparent 72%)",
+          maskImage: "radial-gradient(circle, black 35%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(circle, black 35%, transparent 70%)",
         }}
       >
         <img
@@ -689,12 +686,12 @@ export default function ArcServices() {
             width: "100%",
             height: "100%",
             objectFit: "cover",
-            filter: "contrast(1.15) brightness(0.9)",
+            filter: "contrast(1.1) brightness(0.85)",
           }}
         />
       </div>
 
-      {/* ── CENTER ANCHORED STAGE: TAZRIEL WORDMARK + ORANGE BACKLIGHT ── */}
+      {/* ── CENTER ANCHORED STAGE: TAZRIEL WORDMARK (Layer z-index: 10) ── */}
       <div
         style={{
           position: "absolute",
@@ -703,24 +700,10 @@ export default function ArcServices() {
           alignItems: "center",
           justifyContent: "center",
           pointerEvents: "none",
-          zIndex: 20,
+          zIndex: 10,
           overflow: "hidden",
         }}
       >
-        {/* Subtle orange backlight bloom behind TAZRIEL */}
-        <div
-          data-orange-glow
-          style={{
-            position: "absolute",
-            width: "520px",
-            height: "520px",
-            borderRadius: "50%",
-            filter: "blur(90px)",
-            background: "radial-gradient(circle, rgba(237, 76, 0, 0.8) 0%, rgba(33, 0, 177, 0.4) 60%, transparent 80%)",
-            willChange: "transform, opacity",
-          }}
-        />
-
         {/* Ambient Depth Letters floating in background (Serif Roman particles) */}
         <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
           {depthLetters.map((dl, idx) => (
@@ -732,7 +715,7 @@ export default function ArcServices() {
                 fontFamily: "'Instrument Serif', Georgia, serif",
                 fontWeight: 400,
                 fontSize: "2.6rem",
-                color: "rgba(255, 255, 255, 0.28)",
+                color: "rgba(255, 255, 255, 0.22)",
                 userSelect: "none",
                 willChange: "transform, opacity",
               }}
@@ -742,7 +725,7 @@ export default function ArcServices() {
           ))}
         </div>
 
-        {/* ── TAZRIEL WORDMARK (Generous Luxury Spacing, No Subtitle) ── */}
+        {/* ── TAZRIEL WORDMARK (Centered, Regal Luxury Spacing) ── */}
         <div
           data-assembled-wordmark
           style={{
@@ -766,8 +749,7 @@ export default function ArcServices() {
                 fontSize: "clamp(2.6rem, 5.2vw, 4.6rem)",
                 letterSpacing: "0.08em",
                 color: "#ffffff",
-                textShadow:
-                  "0 4px 20px rgba(0,0,0,0.9), 0 0 35px rgba(237, 76, 0, 0.65), 0 0 65px rgba(237, 76, 0, 0.35)",
+                textShadow: "0 4px 24px rgba(0,0,0,0.9), 0 0 30px rgba(255, 255, 255, 0.25)",
                 userSelect: "none",
                 willChange: "transform, opacity, filter",
               }}
@@ -778,43 +760,51 @@ export default function ArcServices() {
         </div>
       </div>
 
-      {/* ── 1-BY-1 COUNTER-ORBITAL ARC SERVICES (Brought Close to TAZRIEL) ── */}
+      {/* ── CARDS LAYER (z-index: 30, PLACED ABOVE TAZRIEL) ── */}
+      {/* Left cards overlap ONLY letter 'T' | Right cards overlap ONLY letter 'L' */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           pointerEvents: "none",
-          zIndex: 25,
+          zIndex: 30,
         }}
       >
-        {allServices.map((svc, idx) => {
-          const isLeft = idx % 2 === 0;
-          return (
+        {/* LEFT FLANK TRACK (Right edge covers ONLY 'T', flowing Bottom to Top) */}
+        <div
+          style={{
+            position: "absolute",
+            right: "calc(50% + clamp(140px, 15.5vw + 25px, 260px))",
+            top: "50%",
+            width: "min(340px, calc(100vw - 36px))",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        >
+          {leftServices.map((svc) => (
             <div
               key={svc.id}
-              data-orbit-card
+              data-left-card
               style={{
                 position: "absolute",
-                // Positioned tight and close to TAZRIEL center:
-                left: isLeft ? "clamp(24px, calc(50% - 460px), calc(50% - 370px))" : "auto",
-                right: !isLeft ? "clamp(24px, calc(50% - 460px), calc(50% - 370px))" : "auto",
-                top: "50%",
-                width: "min(340px, calc(100vw - 36px))",
+                right: 0,
+                top: 0,
+                width: "100%",
                 willChange: "transform, opacity",
                 pointerEvents: "auto",
               }}
             >
-              {/* Premium Luxury Glassmorphism Card */}
+              {/* Premium Glassmorphism Card (Floating in front of 'T') */}
               <div
                 style={{
                   width: "100%",
-                  background: "linear-gradient(135deg, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0.02) 100%)",
-                  backdropFilter: "blur(26px) saturate(180%)",
-                  WebkitBackdropFilter: "blur(26px) saturate(180%)",
-                  border: "1px solid rgba(255, 255, 255, 0.14)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  backdropFilter: "blur(24px) saturate(160%)",
+                  WebkitBackdropFilter: "blur(24px) saturate(160%)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
                   borderRadius: "22px",
                   padding: "24px 26px",
-                  boxShadow: "0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.18)",
+                  boxShadow: "0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
@@ -840,7 +830,7 @@ export default function ArcServices() {
                         fontFamily: "monospace",
                         fontSize: "10px",
                         letterSpacing: "0.18em",
-                        color: "rgba(255, 255, 255, 0.55)",
+                        color: "rgba(255, 255, 255, 0.6)",
                         textTransform: "uppercase",
                       }}
                     >
@@ -881,8 +871,112 @@ export default function ArcServices() {
                 </p>
               </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+
+        {/* RIGHT FLANK TRACK (Left edge covers ONLY 'L', flowing Top to Bottom) */}
+        <div
+          style={{
+            position: "absolute",
+            left: "calc(50% + clamp(140px, 15.5vw + 25px, 260px))",
+            top: "50%",
+            width: "min(340px, calc(100vw - 36px))",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        >
+          {rightServices.map((svc) => (
+            <div
+              key={svc.id}
+              data-right-card
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: "100%",
+                willChange: "transform, opacity",
+                pointerEvents: "auto",
+              }}
+            >
+              {/* Premium Glassmorphism Card (Floating in front of 'L') */}
+              <div
+                style={{
+                  width: "100%",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  backdropFilter: "blur(24px) saturate(160%)",
+                  WebkitBackdropFilter: "blur(24px) saturate(160%)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  borderRadius: "22px",
+                  padding: "24px 26px",
+                  boxShadow: "0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  minHeight: "180px",
+                }}
+              >
+                {/* Card Top: Index Tag & Geometric Icon */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <span
+                      style={{
+                        fontFamily: "monospace",
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        color: "#ed4c00",
+                        letterSpacing: "0.2em",
+                      }}
+                    >
+                      {svc.index} //
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: "monospace",
+                        fontSize: "10px",
+                        letterSpacing: "0.18em",
+                        color: "rgba(255, 255, 255, 0.6)",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {svc.tag}
+                    </span>
+                  </div>
+                  <div style={{ flexShrink: 0 }}>
+                    <ServiceIcon type={svc.iconType} />
+                  </div>
+                </div>
+
+                {/* Card Title */}
+                <h3
+                  style={{
+                    fontFamily: "system-ui, -apple-system, sans-serif",
+                    fontSize: "1.28rem",
+                    fontWeight: 700,
+                    color: "#ffffff",
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1.25,
+                    margin: "12px 0 0 0",
+                  }}
+                >
+                  {svc.title}
+                </h3>
+
+                {/* Card Description */}
+                <p
+                  style={{
+                    marginTop: "12px",
+                    fontSize: "0.85rem",
+                    lineHeight: 1.55,
+                    color: "rgba(255, 255, 255, 0.72)",
+                    margin: "12px 0 0 0",
+                  }}
+                >
+                  {svc.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ── FOOTER SUB-INDICATOR ── */}
