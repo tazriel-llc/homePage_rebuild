@@ -1,11 +1,5 @@
-import ChapterRail from "@/components/motion/chapter-rail";
 import Hero from "@/components/sections/hero";
-import {
-  ChapterStakes,
-  ChapterProblem,
-  ChapterMechanism,
-  ChapterAnswer,
-} from "@/components/sections/chapters";
+import ArcServices from "@/components/sections/arc-services";
 import GlobalFootprint from "@/components/sections/global-footprint";
 import SolutionsHolder from "@/components/sections/solutions-holder";
 import BuildFutureCta from "@/components/sections/build-future-cta";
@@ -16,9 +10,13 @@ import ContactCta from "@/components/sections/contact-cta";
 /**
  * Tazriel Sovereign Digital Flagship — Homepage Architecture.
  *
- * Narrative Flow (InterGest Canada & Swiss Editorial Luxury):
+ * Narrative Flow (TRIONN Kinetic Storytelling & Swiss Editorial Luxury):
  * 01. Hero — Sovereign thesis & non-fungible attention mandate.
- * 02. Chapters 01–04 — Tactile sheet-over-sheet sticky parallax storytelling.
+ * 02. ArcServices — TRIONN-inspired sculptural disciplines showcase:
+ *     - Phase 1: Massive Stacked Typographic Gate (A.I. / SOFTWARE / OPERATIONS / GOVERNANCE).
+ *     - Phase 2: Letter dispersion & 3D shatter around the carved Basalt Monolith.
+ *     - Phase 3: Counter-orbital curved arc trajectories (Left: Bottom -> Top, Right: Top -> Bottom).
+ *     - Phase 4: Smooth Breaking Transition: Horizontal paper bands slicing across into the network ledger.
  * 03. GlobalFootprint — Architectural network ledger (Addis Ababa + Skopje + Springfield).
  * 04. SolutionsHolder — The cinematic zoom-in portal, 5 horizontal discipline slides,
  *     and the zoom-out reveal with "WE SOLVE WHAT STANDS IN YOUR WAY" in background.
@@ -30,23 +28,15 @@ import ContactCta from "@/components/sections/contact-cta";
  */
 export default function Home() {
   return (
-    <>
-      <ChapterRail />
-      <main id="main">
-        <Hero />
-
-        <ChapterStakes />
-        <ChapterProblem />
-        <ChapterMechanism />
-        <ChapterAnswer />
-
-        <GlobalFootprint />
-        <SolutionsHolder />
-        <BuildFutureCta />
-        <Process />
-        <Recognition />
-        <ContactCta />
-      </main>
-    </>
+    <main id="main">
+      <Hero />
+      <ArcServices />
+      <GlobalFootprint />
+      <SolutionsHolder />
+      <BuildFutureCta />
+      <Process />
+      <Recognition />
+      <ContactCta />
+    </main>
   );
 }
